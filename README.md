@@ -29,3 +29,5 @@ make
 
 The binaries shall reside within `bin`.
 
+Both, the Eclipse IDE as well as the commandline build use a `Makefile` for simplicity.
+
