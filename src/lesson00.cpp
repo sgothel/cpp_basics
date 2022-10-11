@@ -13,7 +13,7 @@
  * Lesson 00
  *
  * A C++ program consist out of
- * - things, like functions and types
+ * - things, like types, their methods and general functions
  * - flow, the program flow of things
  */
 
