@@ -6,7 +6,6 @@
 // Description : C++ Lesson 00
 //============================================================================
 
-#include <cstdio>
 #include <iostream>
 
 /**
@@ -15,6 +14,13 @@
  * A C++ program consist out of
  * - things, like types, their methods and general functions
  * - flow, the program flow of things
+ *
+ * This lesson demonstrates
+ * - function declaration and definition in same or different modules
+ * - clarify loop expressions using different C++ constructs
+ *   - if branch and goto
+ *   - while loop
+ *   - for loop
  */
 
 /**
@@ -65,26 +71,54 @@ int main(int argc, const char* argv[]) {
         }
         // int r = a + b; // b is out of scope
     }
+
+    const int loop_count = 3;
+    // Same loop as if+goto
     {
         // while loop, an exploded for-loop (see below)
-        int i=0; /* loop variable */
-        while( i < argc /* while condition */ ) {
-            std::cout << "main.0.arg[" << i << "]: " << argv[i] << std::endl;
+        std::cout << "loop0.0: ";
+        int i=0;              /* instantiation and initialization of loop variable */
+        mark:
+        if( i < loop_count    /* while condition */ ) {
+            std::cout << "i " << i << ", ";
             i = i + 1; // ++i
+            goto mark;
         }
+        std::cout << std::endl;
     }
+    // Same loop as while
     {
-        // for loop
-        for(int i=0 /* initialization */;
-            i<argc  /* while condition */;
-            ++i     /* tail expression */)
-        {
-            fprintf(stderr, "main.1.arg[%d]: %s\n", i, argv[i]);
+        // while loop, an exploded for-loop (see below)
+        std::cout << "loop1.0: ";
+        int i=0;              /* instantiation and initialization of loop variable */
+        while( i < loop_count /* while condition */ ) {
+            std::cout << "i " << i << ", ";
+            i = i + 1;        /* tail expression */
         }
-        for(int i=0; i<argc; ++i) {
-            fprintf(stderr, "main.2.arg[%d]: %s\n", i, argv[i]);
+        std::cout << std::endl;
+    }
+    // Same loop as for (1)
+    {
+        std::cout << "loop2.0: ";
+        int i;                /* instantiation of loop variable*/
+        for(i=0               /* initialization of loop variable*/;
+            i<loop_count      /* while condition */;
+            ++i               /* tail expression */)
+        {
+            std::cout << "i " << i << ", ";
+        }
+        // `i` is still in scope!
+        std::cout << std::endl;
+    }
+    // Same loop as for (2)
+    {
+        std::cout << "loop2.1: ";
+        /* instantiation and initialization of loop variable; while condition; tail expression */
+        for(int i=0; i<loop_count; ++i) {
+            std::cout << "i " << i << ", ";
         }
         // `i` is out of scope!
+        std::cout << std::endl;
     }
 
 	int error_counter = 0;
