@@ -1,7 +1,7 @@
 # A simple Makefile for compiling small SDL projects
 
 # set the compiler
-CPP		:= g++ -x c++ -std=c++17 -c
+CPP		:= g++ -x c++ -std=c++17 -c -I include -Wall -Werror
 LN	    := g++
 
 # set the compiler flags

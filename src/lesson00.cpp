@@ -47,9 +47,9 @@ int add(const int x, const int y) {
     return x + y;
 }
 
-// Function declaration of a function defined in another module, see lesson00_module.cpp
+// Include header file, which contains declaration of function `double_value` as defined in module lesson00_module.cpp.
 // Linker has to link lesson00.o + lesson00_module.o to resolve this function!
-int double_value(const int x);
+#include "cpp_basics/lesson00_module.hpp"
 
 int main(int argc, const char* argv[]) {
     // the program flow within this function definition
