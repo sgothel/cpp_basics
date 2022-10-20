@@ -33,21 +33,54 @@ void print_newline() {
 }
 
 /**
+ * Paint a simple square, not-filled
+ * @param len length of each side of the square
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ */
+void square(const int len, const int dx=0, const float sx=1.0) {
+    const int len_sx = static_cast<int>( std::round( len * sx ) );
+    print_newline();
+    for(int y=0; y<len; ++y) {
+        print_space(dx);
+        for(int x=0; x<len_sx; ++x) {
+            if( 0 == y || len-1 == y || 0 == x || len_sx-1 == x ) {
+                print_mark( 1 );
+            } else {
+                print_space( 1 );
+            }
+        }
+        print_newline();
+    }
+}
+
+/**
  * Pyramid w/ base_len == 4
+ ```
  *    XXXX
  *     XX
+ ```
  *
  * Pyramid w/ base_len == 5
+ ```
  *    XXXXX
  *     XXX
  *      X
+ ```
+ *
+ * @param base_len length of pyramid's base
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param show_title
  */
-void pyramid_down(const int base_len, const int dx=0, const bool show_title=true) {
+void pyramid_down(const int base_len, const int dx=0, const float sx=1.0, const bool show_title=true) {
     if( show_title ) {
-        printf("\nPyramid(down, l %d, dx %d)\n", base_len, dx);
+        printf("\nPyramid(down, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    for(int i=base_len; i > 0; i-=2) {
-        print_space( dx + ( base_len - i ) / 2 );
+    const int base_len_sx = static_cast<int>( std::round( base_len * sx ) );
+    const int step_sx = static_cast<int>( std::round( 2 * sx ) );
+    for(int i=base_len_sx; i > 0; i-=step_sx) {
+        print_space( dx + ( base_len_sx - i ) / 2 );
         print_mark( i );
         print_newline();
     }
@@ -55,21 +88,32 @@ void pyramid_down(const int base_len, const int dx=0, const bool show_title=true
 
 /**
  * Pyramid w/ base_len == 4
+ ```
  *     XX
  *    XXXX
+ ```
  *
  * Pyramid w/ base_len == 5
+ ```
  *      X
  *     XXX
  *    XXXXX
+ ```
+ *
+ * @param base_len length of pyramid's base
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param show_title
  */
-void pyramid_up(const int base_len, const int dx=0, const bool show_title=true) {
+void pyramid_up(const int base_len, const int dx=0, const float sx=1.0, const bool show_title=true) {
     if( show_title ) {
-        printf("\nPyramid(up, l %d, dx %d)\n", base_len, dx);
+        printf("\nPyramid(up, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    int i = 2 - ( base_len % 2 );
-    for(; i <= base_len; i+=2) {
-        print_space( dx + ( base_len - i ) / 2 );
+    const int base_len_sx = static_cast<int>( std::round( base_len * sx ) );
+    const int step_sx = static_cast<int>( std::round( 2 * sx ) );
+    int i = static_cast<int>( std::round( ( 2 - ( base_len % 2 ) ) * sx ) );
+    for(; i <= base_len_sx; i+=step_sx) {
+        print_space( dx + ( base_len_sx - i ) / 2 );
         print_mark( i );
         print_newline();
     }
@@ -77,23 +121,32 @@ void pyramid_up(const int base_len, const int dx=0, const bool show_title=true) 
 
 /**
  * Salino w/ base_len == 4
+ ```
  *     XX
  *    XXXX
  *     XX
+ ```
  *
  * Salino w/ base_len == 5
+ ```
  *      X
  *     XXX
  *    XXXXX
  *     XXX
  *      X
+ ```
+ *
+ * @param base_len length of pyramid's base
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param show_title
  */
-void salino(const int base_len, const int dx=0, const bool show_title=true) {
+void salino(const int base_len, const int dx=0, const float sx=1.0, const bool show_title=true) {
     if( show_title ) {
-        printf("\nSalino(l %d, dx %d)\n", base_len, dx);
+        printf("\nSalino(l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    pyramid_up(base_len, dx, false);
-    pyramid_down(base_len-2, dx+1, false);
+    pyramid_up(base_len, dx, sx, false);
+    pyramid_down(base_len-2, dx + static_cast<int>( std::round(1*sx) ), sx, false);
 }
 
 /**
@@ -133,17 +186,22 @@ void salino(const int base_len, const int dx=0, const bool show_title=true) {
   XXXXXXXXXXX
     XXXXXXX
  ```
+ *
+ * @param radius radius of disk
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param show_title
  */
-void disk_1(const float radius, const int dx=0, const float sx=1.0, const bool show_title=true) {
+void disk_1(const int radius, const int dx=0, const float sx=1.0, const bool show_title=true) {
     if( show_title ) {
-        printf("\nDisk1(r %.2f, dx %d, sx %.2f)\n", radius, dx, sx);
+        printf("\nDisk1(r %d, dx %d, sx %.2f)\n", radius, dx, sx);
     }
     const float r_sq = radius*radius; // square of disk radius
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
-    const int aabbox_h = (int)std::floor(2 * radius); // disk AABBox height
-    const int aabbox_w = (int)std::floor(2 * radius * sx); // disk AABBox width
-    const float sx_r = aabbox_w / ( 2 * radius );
+    const int aabbox_h = static_cast<int>( std::round(2 * radius) ); // disk AABBox height
+    const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
+    const float sx_r = aabbox_w / ( 2.0 * radius );
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
@@ -211,17 +269,23 @@ char get_char(const float b) {
   .+#######+.
     .-+++-.
  ```
+
+ * @param radius radius of disk
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param aa_seam AA seam of pixels considerd for AA brightness adjusted rendering
+ * @param show_title
  */
-void disk_2(const float radius, const int dx=0, const float sx=1.0, const float aa_seam_=1.0, const bool show_title=true) {
+void disk_2(const int radius, const int dx=0, const float sx=1.0, const float aa_seam_=1.0, const bool show_title=true) {
     const float aa_seam = std::max<float>(1.0, aa_seam_);
     if( show_title ) {
-        printf("\nDisk2(r %.2f, dx %d, sx %.2f, aa_seam %.2f)\n", radius, dx, sx, aa_seam);
+        printf("\nDisk2(r %d, dx %d, sx %.2f, aa_seam %.2f)\n", radius, dx, sx, aa_seam);
     }
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
-    const int aabbox_h = (int)std::floor(2 * radius); // disk AABBox height
-    const int aabbox_w = (int)std::floor(2 * radius * sx); // disk AABBox width
-    const float sx_r = aabbox_w / ( 2 * radius );
+    const int aabbox_h = static_cast<int>( std::round(2 * radius) ); // disk AABBox height
+    const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
+    const float sx_r = aabbox_w / ( 2.0 * radius );
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
@@ -243,15 +307,34 @@ void disk_2(const float radius, const int dx=0, const float sx=1.0, const float 
     }
 }
 
-template<int max_diameter, int sx>
-void disk_2b(const int r) {
-    disk_2(r/2, max_diameter-r+1, sx);
+/**
+ * disk_2 variant using diameter instead of radius
+ *
+ * @param d disc diameter size argument
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ */
+void disk_2b(const int d, const int dx, const float sx) {
+    disk_2(d/2, dx+1, sx);
 }
 
-typedef void(*paint_func)(const int p);
+/**
+ * Function-pointer to draw an object with given given arguments `sz`, `dx` and `sx`.
+ * @param sz object's size argument. Semantic depends on the actual object defintion.
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ */
+typedef void(*paint_func)(const int sz, const int dx, const float sx);
 
-void paint(const int p, paint_func pf) {
-    pf(p);
+/**
+ * Paint something using the given paint_func
+ * @param sz object's size argument. Semantic depends on the actual object defintion.
+ * @param dx distance on x-axis, aka the x-position of object's left edge
+ * @param sx scale factor on x-axis, only for object w/o dx
+ * @param pf function pointer to draw an object with given arguments `sz`, `dx` and `sx`.
+ */
+void paint(const int sz, const int dx, const float sx, paint_func pf) {
+    pf(sz, dx, sx);
 }
 
 int main(int argc, const char* argv[]) {
@@ -293,19 +376,50 @@ int main(int argc, const char* argv[]) {
     }
 
     {
-        const int sx = 2;
+        /**
+         * This block paints all objects in all sizes using
+         * an array of object agnostic `paint_func` function-pointer
+         * to apply the paint functions for all object types.
+         *
+         * This allows polymorphic rendering of objects,
+         * i.e. painting different objects by invoking instances
+         * conforming to the common `paint_func` function-type (callable). <br />
+         * These `paint_func` instances paint the different objects,
+         * e.g. `pyramid_up`, `pyramid_down` etc.
+         */
+        const float sx = 2.0;
         const int min_size =  3;
         const int max_size = 10;
         printf("\nAlternate object with size [%d..%d]\n", min_size, max_size);
 
-        paint_func p1 = [](const int p) { pyramid_up(p*sx, max_size-p); };
-        paint_func paint_funcs[] = { p1,
-                                     [](const int p) { pyramid_down(p*sx, max_size-p); },
-                                     disk_2b<max_size, sx> };
+        /*
+         * Pyramid_up non-capturing lambda function pointer.
+         *
+         * Assignment to a variable of type `paint_func` is only possible here,
+         * since the lambda type is non-capturing.
+         */
+        paint_func p1 = [](const int sz, const int dx, const float sx) { pyramid_up(sz, dx, sx); };
 
+        /* Array of paint_func function pointer */
+        paint_func paint_funcs[] = {
+                /* Assigning `square` function-pointer for index 0.*/
+                square,
+
+                /* Assigning pyramid_up non-capturing lambda function-pointer for index 1.*/
+                p1,
+
+                /* Create and assigning pyramid_down non-capturing lambda function-pointer for index 2. */
+                [](const int sz, const int dx, const float sx) { pyramid_down(sz, dx, sx); },
+
+                /* Assigning `disk_2b` function-pointer for index 3 */
+                disk_2b
+            };
+
+        // for all sizes
         for(int i=min_size; i<=max_size; i++) {
+            // for all object types
             for(size_t t=0; t<sizeof(paint_funcs)/sizeof(paint_func); ++t) {
-                paint(i, paint_funcs[t]);
+                paint(i, max_size-i, sx, paint_funcs[t]);
             }
         }
     }
