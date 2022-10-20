@@ -60,6 +60,12 @@ int add(const int x, const int y) {
 int main(int argc, const char* argv[]) {
     // the program flow within this function definition
     {
+        // loop through all program invocation arguments and print them
+        for(int i=0; i<argc; ++i) {
+            std::cout << "cmd_arg[" << std::to_string(i) << "]: " << argv[i] << std::endl;
+        }
+    }
+    {
         // entering scope-1, constructing `a` while initializing w/ `3`
         int a=3;
         {

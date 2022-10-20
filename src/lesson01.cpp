@@ -251,6 +251,12 @@ void paint(const int p, paint_func pf) {
 }
 
 int main(int argc, const char* argv[]) {
+    {
+        // loop through all program invocation arguments and print them
+        for(int i=0; i<argc; ++i) {
+            printf("cmd_arg[%d]: %s\n", i, argv[i]);
+        }
+    }
     printf("\nPyramids base_len 4\n");
     pyramid_up(4);
     pyramid_down(4);
