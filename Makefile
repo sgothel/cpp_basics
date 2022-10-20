@@ -13,7 +13,7 @@ TEMPDIRS = obj bin
 obj/%.o: src/%.cpp $(HEADERS) Makefile
 	$(CPP) -o $@ $(CPPFLAGS) $<
 
-all: tempdirs bin/lesson00 bin/lesson01
+all: tempdirs bin/lesson00 bin/lesson01 bin/lesson02
 
 .PHONY: all clean tempdirs obj
 
@@ -21,6 +21,9 @@ bin/lesson00: obj/lesson00.o obj/lesson00_module.o
 	$(LN) -o $@ $^ $(LNFLAGS)
 
 bin/lesson01: obj/lesson01.o
+	$(LN) -o $@ $^ $(LNFLAGS)
+
+bin/lesson02: obj/lesson02.o
 	$(LN) -o $@ $^ $(LNFLAGS)
 
 tempdirs:
