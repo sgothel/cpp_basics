@@ -99,6 +99,8 @@ void salino(const int base_len, const int dx=0, const bool show_title=true) {
 /**
  * Disk rendering.
  *
+ * Implementation uses a floating point centroid, or barycenter.
+ *
  * Disk1(r 1.00, dx 4, sx 1.00)
  ```
     XX
@@ -173,6 +175,8 @@ char get_char(const float b) {
 
 /**
  * Antialiased (AA) disk rendering using ASCII-Art alike brightness characters.
+ *
+ * Implementation uses a floating point centroid, or barycenter.
  *
  * Disk2(r 1.00, dx 4, sx 1.00, aa_seam 1.00)
  ```
