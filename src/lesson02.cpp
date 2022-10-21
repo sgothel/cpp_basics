@@ -6,6 +6,7 @@
 // Description : C++ Lesson 01
 //============================================================================
 
+#include <cstdlib>
 #include <cstdio>
 #include <cmath>
 #include <cassert>
@@ -92,6 +93,7 @@ int main(int argc, const char* argv[]) {
             printf("02: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(7 == r);
             assert(6 == i);
+            // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
 
         {
@@ -99,6 +101,7 @@ int main(int argc, const char* argv[]) {
             printf("03: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(7 == r);
             assert(7 == i);
+            // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
 
         {
@@ -106,7 +109,9 @@ int main(int argc, const char* argv[]) {
             printf("04: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(8 == r);
             assert(8 == i);
+            // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
+        // Leaving this scope destructs all automatic allocated resources of this block: `i`, `p_i`.
     }
 
     // Demonstrate using address of a function, i.e. a function-pointer.
@@ -122,6 +127,40 @@ int main(int argc, const char* argv[]) {
         assert( return_incremented_value == f1 );
         assert( 11 == r );
         assert( 10 == i );
+        // Leaving this scope destructs all automatic allocated resources of this block: `f1`, `i`, `r`.
+    }
+
+    // Source of things, from stack to heap w/o automatic destruction when running out-of-scope!
+    {
+        int i = 5; // stack automatic variable
+        assert(5 == i);
+
+        // Heap via C malloc without initialization
+        int* p_j = static_cast<int*>( std::malloc( sizeof(int) ) );
+        {
+            *p_j = 6; // post allocation initialization
+        }
+        assert(6 == *p_j);
+        // Explicit destruction of allocated memory!
+        std::free(p_j);
+        p_j = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
+
+        // Heap via C++ new including initialization invoking copy-ctor
+        int* p_k = new int(7);
+        assert(7 == *p_k);
+        // Explicit destruction of allocated memory!
+        delete p_k;
+        p_k = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
+    }
+
+    // Pointer arithmetic
+    {
+        //const int len = 10;
+
+        // Using an array of int value via C malloc
+        {
+            // int* big
+        }
     }
     return 0;
 }
