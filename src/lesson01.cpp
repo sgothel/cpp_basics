@@ -196,10 +196,10 @@ void disk_1(const int radius, const int dx=0, const float sx=1.0, const bool sho
     if( show_title ) {
         printf("\nDisk1(r %d, dx %d, sx %.2f)\n", radius, dx, sx);
     }
-    const float r_sq = radius*radius; // square of disk radius
+    const float r_sq = radius*radius;     // square of disk radius
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
-    const int aabbox_h = static_cast<int>( std::round(2 * radius) ); // disk AABBox height
+    const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );
 
@@ -283,7 +283,7 @@ void disk_2(const int radius, const int dx=0, const float sx=1.0, const float aa
     }
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
-    const int aabbox_h = static_cast<int>( std::round(2 * radius) ); // disk AABBox height
+    const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );
 
