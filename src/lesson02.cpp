@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cassert>
 #include <string>
+#include <memory>
 
 /**
  * Lesson 02
@@ -93,6 +94,7 @@ int main(int argc, const char* argv[]) {
             printf("02: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(7 == r);
             assert(6 == i);
+
             // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
 
@@ -101,6 +103,7 @@ int main(int argc, const char* argv[]) {
             printf("03: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(7 == r);
             assert(7 == i);
+
             // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
 
@@ -109,6 +112,7 @@ int main(int argc, const char* argv[]) {
             printf("04: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
             assert(8 == r);
             assert(8 == i);
+
             // Leaving this scope destructs all automatic allocated resources of this block: `r`.
         }
         // Leaving this scope destructs all automatic allocated resources of this block: `i`, `p_i`.
@@ -127,6 +131,7 @@ int main(int argc, const char* argv[]) {
         assert( return_incremented_value == f1 );
         assert( 11 == r );
         assert( 10 == i );
+
         // Leaving this scope destructs all automatic allocated resources of this block: `f1`, `i`, `r`.
     }
 
@@ -151,6 +156,33 @@ int main(int argc, const char* argv[]) {
         // Explicit destruction of allocated memory!
         delete p_k;
         p_k = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
+
+        // Leaving this scope destructs all automatic allocated resources of this block: `i`, only pointer itself w/o heap of `p_j` and `p_k`.
+    }
+
+    // Source of things, from stack to heap _with_ automatic destruction when running out-of-scope!
+    {
+        int i = 5; // stack automatic variable
+        assert(5 == i);
+
+        // Heap via C++ new including initialization invoking copy-ctor,
+        // then assigned ownership to std::unique_ptr<int>.
+        std::unique_ptr<int> p_j( new int(6) );
+        assert(6 == *p_j);
+
+        // Implicit heap via C++ new from `std::make_unique<int>` including initialization invoking copy-ctor.
+        std::unique_ptr<int> p_k = std::make_unique<int>( 7 );
+        assert(7 == *p_k);
+
+        // Implicit heap via C++ new from `std::make_shared<int>` including initialization invoking copy-ctor.
+        std::shared_ptr<int> p_l = std::make_shared<int>( 8 );
+        assert(8 == *p_l);
+
+        // Shared use of p_l and its heap, latter only gets destructed if both std::shared_ptr<int> instances are destructed.
+        std::shared_ptr<int> p_l2 = p_l;
+        assert(8 == *p_l2);
+
+        // Leaving this scope destructs all automatic allocated resources of this block: `i`, as well as `p_j`, `p_k`, `p_l` and `p_l2` inclusive their heap.
     }
 
     // Pointer arithmetic
