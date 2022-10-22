@@ -33,13 +33,26 @@ void print_newline() {
 }
 
 /**
+ * Round given float and return its integer representation.
+ *
+ * This function utilizes `constexpr`, i.e. might be evaluated at compile time
+ * if the used parameters are of constexpr nature.
+ *
+ * @param v the float
+ * @return the rounded integer representation
+ */
+constexpr int round_to_int(const float v) noexcept {
+    return static_cast<int>( std::round( v ) );
+}
+
+/**
  * Paint a simple square, not-filled
  * @param len length of each side of the square
  * @param dx distance on x-axis, aka the x-position of object's left edge
  * @param sx scale factor on x-axis, only for object w/o dx
  */
 void square(const int len, const int dx=0, const float sx=1.0) {
-    const int len_sx = static_cast<int>( std::round( len * sx ) );
+    const int len_sx = round_to_int( len * sx );
     print_newline();
     for(int y=0; y<len; ++y) {
         print_space(dx);
@@ -77,8 +90,8 @@ void pyramid_down(const int base_len, const int dx=0, const float sx=1.0, const 
     if( show_title ) {
         printf("\nPyramid(down, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    const int base_len_sx = static_cast<int>( std::round( base_len * sx ) );
-    const int step_sx = static_cast<int>( std::round( 2 * sx ) );
+    const int base_len_sx = round_to_int( base_len * sx );
+    const int step_sx = round_to_int( 2 * sx );
     for(int i=base_len_sx; i > 0; i-=step_sx) {
         print_space( dx + ( base_len_sx - i ) / 2 );
         print_mark( i );
@@ -109,9 +122,9 @@ void pyramid_up(const int base_len, const int dx=0, const float sx=1.0, const bo
     if( show_title ) {
         printf("\nPyramid(up, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    const int base_len_sx = static_cast<int>( std::round( base_len * sx ) );
-    const int step_sx = static_cast<int>( std::round( 2 * sx ) );
-    int i = static_cast<int>( std::round( ( 2 - ( base_len % 2 ) ) * sx ) );
+    const int base_len_sx = round_to_int( base_len * sx );
+    const int step_sx = round_to_int( 2 * sx );
+    int i = round_to_int( ( 2 - ( base_len % 2 ) ) * sx );
     for(; i <= base_len_sx; i+=step_sx) {
         print_space( dx + ( base_len_sx - i ) / 2 );
         print_mark( i );
@@ -146,7 +159,7 @@ void salino(const int base_len, const int dx=0, const float sx=1.0, const bool s
         printf("\nSalino(l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
     pyramid_up(base_len, dx, sx, false);
-    pyramid_down(base_len-2, dx + static_cast<int>( std::round(1*sx) ), sx, false);
+    pyramid_down(base_len-2, dx + round_to_int( 1 * sx ), sx, false);
 }
 
 /**
@@ -200,7 +213,7 @@ void disk_1(const int radius, const int dx=0, const float sx=1.0, const bool sho
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
     const int aabbox_h = 2 * radius;      // disk AABBox height
-    const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
+    const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );
 
     for(int y=0; y<aabbox_h; ++y) {
@@ -284,7 +297,7 @@ void disk_2(const int radius, const int dx=0, const float sx=1.0, const float aa
     const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
     const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
     const int aabbox_h = 2 * radius;      // disk AABBox height
-    const int aabbox_w = static_cast<int>( std::round(2 * radius * sx) ); // disk AABBox width
+    const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );
 
     for(int y=0; y<aabbox_h; ++y) {
