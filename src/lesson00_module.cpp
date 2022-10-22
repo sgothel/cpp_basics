@@ -2,7 +2,8 @@
 // Name        : lesson00_module.cpp
 // Author      : Sven Gothel
 // Version     : 0.1
-// Copyright   : MIT
+// Copyright   : 2022 Gothel Software e.K.
+// License     : MIT
 // Description : C++ Lesson 00
 //============================================================================
 

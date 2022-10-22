@@ -1,8 +1,9 @@
 //============================================================================
-// Name        : lesson00.cpp
-// Author      : Sven Gothel
+// Name        : lesson01.cpp
+// Author      : Sven Gothel, Qun Gothel, Svenson Gothel
 // Version     : 0.1
-// Copyright   : MIT
+// Copyright   : 2022 Gothel Software e.K.
+// License     : MIT
 // Description : C++ Lesson 01
 //============================================================================
 
