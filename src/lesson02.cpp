@@ -7,9 +7,11 @@
 //============================================================================
 
 #include <cstdlib>
+#include <cstdint>
 #include <cstdio>
 #include <cmath>
 #include <cassert>
+
 #include <string>
 #include <memory>
 
@@ -185,13 +187,109 @@ int main(int argc, const char* argv[]) {
         // Leaving this scope destructs all automatic allocated resources of this block: `i`, as well as `p_j`, `p_k`, `p_l` and `p_l2` inclusive their heap.
     }
 
-    // Pointer arithmetic
+    // Arrays and a little piece of pointer-arithmetic
     {
-        //const int len = 10;
+        const size_t len = 10;
 
-        // Using an array of int value via C malloc
+        // Using an array of int value via C malloc and manual initialization to desired values
         {
-            // int* big
+            // Heap for array via C malloc without initialization
+            int* array = static_cast<int*>( std::malloc( sizeof(int) * len ) );
+
+            // manual initialization of array to desired values
+            for(size_t i=0; i<len; ++i) {
+                // `array + i` increments the `int` pointer `array` by `i * sizeof(int)` bytes!
+                *( array + i ) = static_cast<int>( i );
+            }
+
+            // read and validate array content
+            for(size_t i=0; i<len; ++i) {
+                // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
+                const int v = array[i];
+                assert( static_cast<int>( i ) == v );
+            }
+
+            // Demonstrate pointer distance by element-size: 1 == ( array + 1 ) - array
+            {
+                // p1 and p0 are pointer of type `int`,
+                // hence all arithmetic operations on these pointers operate on int-size.
+                int* p1_int = array + 1;
+                int* p0_int = array;
+                size_t element_distance = p1_int - p0_int;
+                printf("1 element distance int int-size: %zu, p1 %p, p0 %p\n", element_distance, p1_int, p0_int);
+                assert( 1 == ( p1_int - p0_int ) );
+            }
+
+            // Demonstrate pointer distance by byte-size: sizeof(int) == ( array + 1 ) - array
+            {
+                // p1 and p0 are pointer of type `uint8_t` (byte-sized unsigned int),
+                // hence all arithmetic operations on these pointers operate on byte-size.
+                uint8_t* p1_int = reinterpret_cast<uint8_t*>( array + 1 );
+                uint8_t* p0_int = reinterpret_cast<uint8_t*>( array );
+                size_t byte_distance = p1_int - p0_int;
+                printf("1 element distance in byte-size: %zu, p1 %p, p0 %p\n", byte_distance, p1_int, p0_int);
+                assert( sizeof(int) == ( p1_int - p0_int ) );
+            }
+
+            // Explicit destruction of allocated memory!
+            std::free(array);
+            array = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
+        }
+
+        // Using an array of int value via C++ new[], its default initialization _and_ manual initialization to desired values
+        {
+            // Heap for array via C++ new[] with default constructor initialization
+            int* array = new int[len];
+
+            // manual initialization of array to desired values
+            for(size_t i=0; i<len; ++i) {
+                // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
+                array[i] = static_cast<int>( i );
+            }
+
+            // read and validate array content
+            for(size_t i=0; i<len; ++i) {
+                // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
+                const int v = array[i];
+                assert( static_cast<int>( i ) == v );
+            }
+
+            // Explicit destruction of allocated memory!
+            delete array;
+            array = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
+        }
+
+        // Using an array of int value via C malloc and C++ placement new to desired values
+        {
+            // Heap for array via C malloc without initialization
+            int* array = static_cast<int*>( std::malloc( sizeof(int) * len ) );
+
+            // manual initialization of array to desired values
+            for(size_t i=0; i<len; ++i) {
+                // placement-new with given memory-address and `int` copy-ctor
+                new( array + i ) int( static_cast<int>( i ) );
+            }
+
+            // read and validate array content
+            for(size_t i=0; i<len; ++i) {
+                // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
+                const int v = array[i];
+                assert( static_cast<int>( i ) == v );
+            }
+
+            // Manual destructor call matching `placement-new` above,
+            // only valid for non build-in types
+            // and required in case type's constructor has side-effects, i.e. a non `TriviallyCopyable` type.
+            //
+            // This is not the case for `int`, as it is a `TriviallyCopyable` type and even has no destructor to call.
+            //
+            // for(size_t i=0; i<len; ++i) {
+            //    (array + i)->~a_complex_type();
+            // }
+
+            // Explicit destruction of allocated memory!
+            std::free(array);
+            array = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
         }
     }
     return 0;
