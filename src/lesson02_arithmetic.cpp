@@ -70,7 +70,9 @@ int factorial(int v) {
     // factorial(5) = 1*2*3*4*5
     int r=v;
     while( v > 1 ) {
-        r = r * ( --v );
+        // v = v - 1;
+        // r = r * v;
+        r *= --v;
     }
     return r;
 }
