@@ -3,7 +3,7 @@
 // Author      : Sven Gothel
 // Copyright   : 2022 Gothel Software e.K.
 // License     : MIT
-// Description : C++ Lesson 01
+// Description : C++ Lesson 1.0 Memory (data, references and pointer)
 //============================================================================
 
 #include <cstdlib>
@@ -16,7 +16,7 @@
 #include <memory>
 
 /**
- * Lesson 02
+ * Lesson 1.0
  *
  * Things occupying space, actual memory for data and code accessible via references and pointers.
  *
@@ -122,6 +122,7 @@ int main(int argc, const char* argv[]) {
 
     // Demonstrate using address of a function, i.e. a function-pointer.
     {
+        // `incr_func` is a created type definition of a function
         typedef int(*incr_func)(const int);
         printf("10: return_incremented_value: address %p\n",
                 return_incremented_value);

@@ -3,7 +3,7 @@
 // Author      : Sven Gothel, Qun Gothel, Svenson Gothel
 // Copyright   : 2022 Gothel Software e.K.
 // License     : MIT
-// Description : C++ Lesson 01
+// Description : C++ Lesson 0.3 Geometry 1 (Complex Version w/ x-axis scale factor)
 //============================================================================
 
 #include <cstdio>
@@ -11,9 +11,9 @@
 #include <string>
 
 /**
- * Lesson 01
+ * Lesson 0.3
  *
- * Application of C++ functions rendering geometric Objects using ASCII-Art
+ * Implementing rendering of simple geometric Objects using ASCII-Art (w/ x-axis scale factor)
  */
 
 void print_space(const int n) {
@@ -210,8 +210,8 @@ void disk_1(const int radius, const int dx=0, const float sx=1.0, const bool sho
         printf("\nDisk1(r %d, dx %d, sx %.2f)\n", radius, dx, sx);
     }
     const float r_sq = radius*radius;     // square of disk radius
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
+    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );
@@ -294,8 +294,8 @@ void disk_2(const int radius, const int dx=0, const float sx=1.0, const float aa
     if( show_title ) {
         printf("\nDisk2(r %d, dx %d, sx %.2f, aa_seam %.2f)\n", radius, dx, sx, aa_seam);
     }
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component
+    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
     const float sx_r = aabbox_w / ( 2.0 * radius );

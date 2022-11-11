@@ -1,12 +1,12 @@
 //============================================================================
-// Name        : lesson00_module.hpp
+// Name        : lesson02_module.hpp
 // Author      : Sven Gothel
 // Copyright   : 2022 Gothel Software e.K.
 // License     : MIT
-// Description : C++ Lesson 00
+// Description : C++ Lesson 0.1 Module for external Function
 //============================================================================
 
-// function declaration as defined in lesson00_module.cpp
+// function declaration as defined in lesson01_module.cpp
 int double_value(const int x);
 
 
