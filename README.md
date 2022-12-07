@@ -12,6 +12,8 @@ for our computer science class.
 ## Supported Platforms
 C++20 and better.
 
+## Building Binaries
+
 ### Build Dependencies
 - CMake 3.13+ but >= 3.18 is recommended
 - C++20 compiler
