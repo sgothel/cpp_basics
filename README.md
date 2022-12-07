@@ -22,7 +22,7 @@ apt install git build-essential g++ gcc libc-dev make
 
 For a generic build use:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
-git clone https://jausoft.com/cgit/cs_class/arithmetic.git
+git clone https://jausoft.com/cgit/cs_class/cpp_basics.git
 cd cpp_basics
 make
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
