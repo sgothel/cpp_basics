@@ -1,5 +1,4 @@
 //============================================================================
-// Name        : arithmetic.cpp
 // Author      : Svenson Han Gothel and Sven Gothel
 // Version     : 0.1
 // Copyright   : MIT

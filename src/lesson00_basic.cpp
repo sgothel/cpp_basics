@@ -1,5 +1,4 @@
 //============================================================================
-// Name        : lesson00.cpp
 // Author      : Sven Gothel
 // Copyright   : 2022 Gothel Software e.K.
 // License     : MIT
