@@ -189,17 +189,17 @@ void disk_1(const int radius, const int dx=0, const bool show_title=true) {
     if( show_title ) {
         printf("\nDisk1(r %d, dx %d)\n", radius, dx);
     }
-    const float r_sq = radius*radius;     // square of disk radius
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
+    const float r_sq = (float)(radius*radius); // square of disk radius
+    const float disk_p0_x = (float)radius - 0.5f; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = (float)radius - 0.5f; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = 2 * radius;      // disk AABBox width
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
         for(int x=0; x<aabbox_w; ++x) {
-            const float a = disk_p0_x - x;
-            const float b = disk_p0_y - y;
+            const float a = disk_p0_x - (float)x;
+            const float b = disk_p0_y - (float)y;
             const float dxy_p0_sq = a*a + b*b;
             if( dxy_p0_sq <= r_sq ) {
                 print_mark( 1 );
@@ -220,7 +220,7 @@ static std::string brightness("#=+-.");
 char get_char(const float b) {
     const size_t max_idx = brightness.size()-1;
     const float b_n = std::max<float>( 0.0, std::min<float>(1.0 , b) ); // normalize [0..1]
-    return brightness[ std::min<size_t>(max_idx, std::round( b_n * max_idx ) ) ];
+    return brightness[ std::min<size_t>(max_idx, (size_t)std::round( b_n * (float)max_idx ) ) ];
 }
 
 /**
@@ -272,23 +272,23 @@ void disk_2(const int radius, const int dx=0, const float aa_seam_=1.0, const bo
     if( show_title ) {
         printf("\nDisk2(r %d, dx %d, aa_seam %.2f)\n", radius, dx, aa_seam);
     }
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
+    const float disk_p0_x = (float)radius - 0.5f; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = (float)radius - 0.5f; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
     const int aabbox_w = 2 * radius;      // disk AABBox width
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
         for(int x=0; x<aabbox_w; ++x) {
-            const float a = disk_p0_x - x;
-            const float b = disk_p0_y - y;
+            const float a = disk_p0_x - (float)x;
+            const float b = disk_p0_y - (float)y;
             const float dxy_p0 = std::sqrt( a*a + b*b );
-            if( dxy_p0 <= radius - aa_seam ) {
+            if( dxy_p0 <= (float)radius - aa_seam ) {
                 print_mark( 1, get_char( 0 ) );
-            } else if( dxy_p0 <= radius ) {
+            } else if( dxy_p0 <= (float)radius ) {
                 // dxy_p0 = ] ( r - aa_seam ) .. r ]
-                const float d_r = ( radius - dxy_p0 ) / aa_seam ; // d_r ~ 1/brightness
-                print_mark( 1, get_char( 1.0 - d_r ) );
+                const float d_r = ( (float)radius - dxy_p0 ) / aa_seam ; // d_r ~ 1/brightness
+                print_mark( 1, get_char( 1.0f - d_r ) );
             } else {
                 print_space( 1 );
             }
@@ -397,10 +397,15 @@ int main(int argc, const char* argv[]) {
 
         // for all sizes
         for(int i=min_size; i<=max_size; i++) {
-            // for all object types
-            for(size_t t=0; t<sizeof(paint_funcs)/sizeof(paint_func); ++t) {
-                paint(i, max_size-i, paint_funcs[t]);
+            // for all object types using range-loop
+            for(const paint_func& f : paint_funcs) {
+                paint(i, max_size-i, f);
             }
+            // A traditional loop would look like:
+            //
+            // for(size_t t=0; t<sizeof(paint_funcs)/sizeof(paint_func); ++t) {
+            //    paint(i, max_size-i, paint_funcs[t]);
+            //}
         }
     }
 

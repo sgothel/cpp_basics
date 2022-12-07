@@ -15,14 +15,15 @@ class base_base_dog {
         base_base_dog()
         {
             cout<< "base_dog::ctor begin" <<endl;
-            bark() ;
+            bark() ; //NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): intentional
+            
             cout<< "base_dog::ctor end" <<endl;
         }
 
         virtual ~base_base_dog()
         {
             cout<< "base_dog::dtor begin" <<endl;
-            bark();
+            bark(); //NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): intentional
             cout<< "base_dog::dtor end" <<endl;
         }
 
@@ -37,14 +38,14 @@ class top_dog : public base_base_dog {
         top_dog()
         {
             cout<< "top_dog::ctor begin" <<endl;
-            bark();
+            bark(); //NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): intentional
             cout<< "top_dog::ctor end" <<endl;
         }
 
         ~top_dog() override
         {
             cout<< "top_dog::dtor" <<endl;
-            bark();
+            bark(); //NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): intentional
             cout<< "top_dog::end" <<endl;
         }
 

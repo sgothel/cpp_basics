@@ -1,4 +1,6 @@
-/bin/
-/obj/
-/Debug/
-/build/
+/.cache/
+build*/
+dist*/
+/compile_commands.json
+*~
+*.log

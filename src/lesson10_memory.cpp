@@ -181,7 +181,7 @@ int main(int argc, const char* argv[]) {
         assert(8 == *p_l);
 
         // Shared use of p_l and its heap, latter only gets destructed if both std::shared_ptr<int> instances are destructed.
-        std::shared_ptr<int> p_l2 = p_l;
+        std::shared_ptr<int> p_l2 = p_l; //NOLINT(performance-unnecessary-copy-initialization): intentional
         assert(8 == *p_l2);
 
         // Leaving this scope destructs all automatic allocated resources of this block: `i`, as well as `p_j`, `p_k`, `p_l` and `p_l2` inclusive their heap.
@@ -255,7 +255,7 @@ int main(int argc, const char* argv[]) {
             }
 
             // Explicit destruction of allocated memory!
-            delete array;
+            delete[] array;
             array = nullptr; // convention, but not required here as impossible to reuse due to running out of scope
         }
 

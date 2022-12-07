@@ -177,7 +177,7 @@ int main(int argc, const char* argv[]) {
 	{
 		for(int a = 0; a <= 10; ++a) {
 			for(int b=0; b <= 5; ++b) {
-				const int expected = std::pow(a, b);
+				const int expected = (int)std::pow(a, b);
 				const int has = my_pow(a, b);
 				if( expected != has ) {
 					printf("Error: %d ** %d != %d, error result %d ? ",

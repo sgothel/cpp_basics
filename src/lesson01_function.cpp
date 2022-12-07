@@ -45,9 +45,9 @@ int add(const int x, const int y) {
     return x + y;
 }
 
-// Include header file, which contains declaration of function `double_value` as defined in module lesson03_module.cpp.
-// Linker has to link lesson01_function.o + lesson03_module.o to resolve this function!
-#include "cpp_basics/lesson01_module.hpp"
+// Include header file, which contains declaration of function `double_value` as defined in module module_lesson01.cpp.
+// Linker has to link lesson01_function.o + module_lesson01.o to resolve this function!
+#include "cpp_basics/module_lesson01.hpp"
 
 int main(int argc, const char* argv[]) {
     // A loop to print all program invocation arguments

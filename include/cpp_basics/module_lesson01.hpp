@@ -5,12 +5,7 @@
 // Description : C++ Lesson 0.1 Module for external Function
 //============================================================================
 
-// include common function declaration
-#include "cpp_basics/lesson01_module.hpp"
-
-// function definition as used in another module, see lesson01_function.cpp
-int double_value(const int x) {
-    return 2 * x;
-}
+// function declaration as defined in module_lesson01.cpp
+int double_value(const int x);
 
 

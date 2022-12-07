@@ -51,7 +51,7 @@ constexpr int round_to_int(const float v) noexcept {
  * @param sx scale factor on x-axis, only for object w/o dx
  */
 void square(const int len, const int dx=0, const float sx=1.0) {
-    const int len_sx = round_to_int( len * sx );
+    const int len_sx = round_to_int( (float)len * sx );
     print_newline();
     for(int y=0; y<len; ++y) {
         print_space(dx);
@@ -89,7 +89,7 @@ void pyramid_down(const int base_len, const int dx=0, const float sx=1.0, const 
     if( show_title ) {
         printf("\nPyramid(down, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    const int base_len_sx = round_to_int( base_len * sx );
+    const int base_len_sx = round_to_int( (float)base_len * sx );
     const int step_sx = round_to_int( 2 * sx );
     for(int i=base_len_sx; i > 0; i-=step_sx) {
         print_space( dx + ( base_len_sx - i ) / 2 );
@@ -121,9 +121,9 @@ void pyramid_up(const int base_len, const int dx=0, const float sx=1.0, const bo
     if( show_title ) {
         printf("\nPyramid(up, l %d, dx %d, sx %.2f)\n", base_len, dx, sx);
     }
-    const int base_len_sx = round_to_int( base_len * sx );
+    const int base_len_sx = round_to_int( (float)base_len * sx );
     const int step_sx = round_to_int( 2 * sx );
-    int i = round_to_int( ( 2 - ( base_len % 2 ) ) * sx );
+    int i = round_to_int( (float)( 2 - ( base_len % 2 ) ) * sx );
     for(; i <= base_len_sx; i+=step_sx) {
         print_space( dx + ( base_len_sx - i ) / 2 );
         print_mark( i );
@@ -208,18 +208,18 @@ void disk_1(const int radius, const int dx=0, const float sx=1.0, const bool sho
     if( show_title ) {
         printf("\nDisk1(r %d, dx %d, sx %.2f)\n", radius, dx, sx);
     }
-    const float r_sq = radius*radius;     // square of disk radius
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
+    const float r_sq = (float)(radius*radius);     // square of disk radius
+    const float disk_p0_x = (float)radius - 0.5f; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = (float)radius - 0.5f; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
-    const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
-    const float sx_r = aabbox_w / ( 2.0 * radius );
+    const int aabbox_w = round_to_int( 2.0f * (float)radius * sx ); // disk AABBox width
+    const float sx_r = (float)aabbox_w / ( 2.0f * (float)radius );
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
         for(int x=0; x<aabbox_w; ++x) {
-            const float a = disk_p0_x - x/sx_r;
-            const float b = disk_p0_y - y;
+            const float a = disk_p0_x - (float)x/sx_r;
+            const float b = disk_p0_y - (float)y;
             const float dxy_p0_sq = a*a + b*b;
             if( dxy_p0_sq <= r_sq ) {
                 print_mark( 1 );
@@ -240,7 +240,7 @@ static std::string brightness("#=+-.");
 char get_char(const float b) {
     const size_t max_idx = brightness.size()-1;
     const float b_n = std::max<float>( 0.0, std::min<float>(1.0 , b) ); // normalize [0..1]
-    return brightness[ std::min<size_t>(max_idx, std::round( b_n * max_idx ) ) ];
+    return brightness[ std::min<size_t>(max_idx, (size_t)std::round( b_n * (float)max_idx ) ) ];
 }
 
 /**
@@ -293,24 +293,24 @@ void disk_2(const int radius, const int dx=0, const float sx=1.0, const float aa
     if( show_title ) {
         printf("\nDisk2(r %d, dx %d, sx %.2f, aa_seam %.2f)\n", radius, dx, sx, aa_seam);
     }
-    const float disk_p0_x = radius - 0.5; // disk center point p0, x-component, a centroid
-    const float disk_p0_y = radius - 0.5; // disk center point p0, y-component, a centroid
+    const float disk_p0_x = (float)radius - 0.5f; // disk center point p0, x-component, a centroid
+    const float disk_p0_y = (float)radius - 0.5f; // disk center point p0, y-component, a centroid
     const int aabbox_h = 2 * radius;      // disk AABBox height
-    const int aabbox_w = round_to_int( 2 * radius * sx ); // disk AABBox width
-    const float sx_r = aabbox_w / ( 2.0 * radius );
+    const int aabbox_w = round_to_int( 2.0f * (float)radius * sx ); // disk AABBox width
+    const float sx_r = (float)aabbox_w / ( 2.0f * (float)radius );
 
     for(int y=0; y<aabbox_h; ++y) {
         print_space(dx);
         for(int x=0; x<aabbox_w; ++x) {
-            const float a = disk_p0_x - x/sx_r;
-            const float b = disk_p0_y - y;
+            const float a = disk_p0_x - (float)x/sx_r;
+            const float b = disk_p0_y - (float)y;
             const float dxy_p0 = std::sqrt( a*a + b*b );
-            if( dxy_p0 <= radius - aa_seam ) {
+            if( dxy_p0 <= (float)radius - aa_seam ) {
                 print_mark( 1, get_char( 0 ) );
-            } else if( dxy_p0 <= radius ) {
+            } else if( dxy_p0 <= (float)radius ) {
                 // dxy_p0 = ] ( r - aa_seam ) .. r ]
-                const float d_r = ( radius - dxy_p0 ) / aa_seam ; // d_r ~ 1/brightness
-                print_mark( 1, get_char( 1.0 - d_r ) );
+                const float d_r = ( (float)radius - dxy_p0 ) / aa_seam ; // d_r ~ 1/brightness
+                print_mark( 1, get_char( 1.0f - d_r ) );
             } else {
                 print_space( 1 );
             }
@@ -410,7 +410,7 @@ int main(int argc, const char* argv[]) {
          * Assignment to a variable of type `paint_func` is only possible here,
          * since the lambda type is non-capturing.
          */
-        paint_func p1 = [](const int sz, const int dx, const float sx) { pyramid_up(sz, dx, sx); };
+        paint_func p1 = [](const int sz_, const int dx_, const float sx_) { pyramid_up(sz_, dx_, sx_); };
 
         /* Array of paint_func function pointer */
         paint_func paint_funcs[] = {
@@ -421,7 +421,7 @@ int main(int argc, const char* argv[]) {
                 p1,
 
                 /* Create and assigning pyramid_down non-capturing lambda function-pointer for index 2. */
-                [](const int sz, const int dx, const float sx) { pyramid_down(sz, dx, sx); },
+                [](const int sz_, const int dx_, const float sx_) { pyramid_down(sz_, dx_, sx_); },
 
                 /* Assigning `disk_2b` function-pointer for index 3 */
                 disk_2b
@@ -429,10 +429,15 @@ int main(int argc, const char* argv[]) {
 
         // for all sizes
         for(int i=min_size; i<=max_size; i++) {
-            // for all object types
-            for(size_t t=0; t<sizeof(paint_funcs)/sizeof(paint_func); ++t) {
-                paint(i, max_size-i, sx, paint_funcs[t]);
+            // for all object types using range-loop
+            for(const paint_func& f : paint_funcs) {
+                paint(i, max_size-i, sx, f);
             }
+            // A traditional loop would look like:
+            //
+            // for(size_t t=0; t<sizeof(paint_funcs)/sizeof(paint_func); ++t) {
+            //    paint(i, max_size-i, sx, paint_funcs[t]);
+            // }
         }
     }
 
