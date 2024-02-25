@@ -1,8 +1,8 @@
 //============================================================================
-// Author      : Sven Gothel
-// Copyright   : 2022 Gothel Software e.K.
+// Author      : Sven Göthel
+// Copyright   : 2022 Göthel Software e.K.
 // License     : MIT
-// Description : C++ Lesson 2.5 OOP (virtual funcation call in ctor/dtor)
+// Description : C++ Lesson 2.3 OOP (inheritance w/ virtual function call in ctor/dtor)
 //============================================================================
 
 #include <iostream>
