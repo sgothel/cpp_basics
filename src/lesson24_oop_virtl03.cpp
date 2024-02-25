@@ -240,6 +240,11 @@ int main(int, char*[]) {
     assert( nullptr != p2 );
     std::cout << "00.p2 = " << *p2 << std::endl;
     {
+        // casting shared_ptr<super-class> to shared_ptr<sub-class> is possible, if you must
+        std::shared_ptr<plant_t> p2_plant = std::static_pointer_cast<plant_t>( p2 );
+        assert( nullptr != p2_plant );
+    }
+    {
         shared_creature_t a12 = a1.procreate(); // only sexual procreation supported for this animal_t
         assert( nullptr == a12 );
     }
