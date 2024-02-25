@@ -2,7 +2,7 @@
 // Author      : Svenson Han Gothel and Sven Gothel
 // Version     : 0.1
 // Copyright   : MIT
-// Description : C++ Lesson 0.2 Applied arithmetic using C++
+// Description : C++ Lesson 0.2a Applied arithmetic using C++
 //============================================================================
 
 #include <cstdio>
@@ -67,7 +67,7 @@ int my_pow(const int x, const int y) {
 
 int factorial(int v) {
     // factorial(5) = 1*2*3*4*5
-    int r=v;
+    int r = v;
     while( v > 1 ) {
         // v = v - 1;
         // r = r * v;
@@ -81,16 +81,16 @@ float machineEpsilon() {
     const float two(2);
     float x = 1;
     float res;
-    float t;
+    // float t;
     int i=0;
     do {
         res = x;
         x = x / two;
-        t = one + x;
-        fprintf(stderr, "%3d: %.48f -> %.48f, %.48f\n", i, res, x, t);
+        // t = one + x;
+        // fprintf(stderr, "%3d: %.48f -> %.48f, %.48f\n", i, res, x, t);
         // std::cerr << i << ": " << res << " -> " << x << std::endl;
         ++i;
-    } while ( t > one);
+    } while ( one + x  > one );
     return res;
 }
 
