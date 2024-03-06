@@ -45,8 +45,14 @@ class sint_t {
 
         bool is_zero() const noexcept { return 0 == store; }
 
-        /** Explicit bool operator, returns `true` iff this is not zero, otherwise false. */
+        /**
+         * Explicit bool conversion operator using target-type-name as method name.
+         *
+         * Returns `true` iff this is not zero, otherwise false.
+         */
         explicit operator bool() const noexcept { return !is_zero(); }
+
+         // operator int() const noexcept { return store; }
 
         /** Not-bool operator, returns `true` iff this is zero, otherwise false. */
         bool operator !() const noexcept { return is_zero(); }
@@ -197,20 +203,67 @@ std::ostream& operator<<(std::ostream& out, const sint_t& v) {
     return out << v.to_string();
 }
 
+// DANGER: Implicit conversion bool -> int with overloaded functions
+int lala(int a, int b) { return a + b; }
+int lala(int a, bool b) { if(b) { return a; } else { return -a; } }
+
+// Safe: 'enum class' has no implicit conversion
+enum class bool_t : int {
+    f,
+    t
+};
+int lala(int a, bool_t b) { if(bool_t::t == b) { return a; } else { return -a; } }
+
 int main(int, char*[]) {
-    sint_t zero(0), ten(10), twenty(20), thirty(30), one(1), two(2);
+    const sint_t zero, ten(10), twenty(20), thirty(30), one(1), two(2);
     std::cout << "zero = " << zero << std::endl;
     std::cout << "ten = " << ten << std::endl;
     std::cout << "twenty = " << twenty << std::endl;
     std::cout << "thirty = " << thirty << std::endl;
 
+    // implicit vs explicit conversion
+    {
+        // sint_t lala = 4; // Error, requires implicit conversion but only explicit is allowed
+        sint_t lala1 = sint_t(4);
+        sint_t lala2 = static_cast<sint_t>(4);
+        (void)lala1;
+        (void)lala2;
+    }
+    {
+        const sint_t a(2), b(3);
+        const sint_t c = a + b;
+        // a += b; // error: passing ‘const sint_t’ as ‘this’ argument discards qualifiers
+    }
+    if( ten ) {
+        // bool b1 = ten; // error: cannot convert ‘sint_t’ to ‘bool’ in initialization
+    }
+
     //
-    // Logical operations
+    // Logical operation, using conversion operator `explicit operator bool() ...`
     //
     assert( !zero );
     assert( ten );
     assert( twenty );
     assert( thirty );
+
+    // Implicit conversion of bool -> int is INSECURE!
+    {
+        int i1 = 1;
+        bool b1 = true; // implied 1
+        int i2 = i1 + b1; // default implicit conversion bool -> int
+        std::cout << "i2.a: " << std::to_string(i1) << " + "
+                  << std::to_string(b1) << " = "
+                  << std::to_string(i2) << std::endl;
+        // Wrong result if
+        // i2 = i1 + ten; // operation bool() -> implicit -> int
+        std::cout << "i2.b: " << std::to_string(i1) << " + " << ten << " = " << std::to_string(i2) << std::endl;
+    }
+    // potential conversion issues with overloaded function
+    {
+        assert(3 == lala(1, 2));
+        assert(1 == lala(1, true));
+        assert(1 == lala(1, bool_t::t));
+    }
 
     //
     // Comparison operations
