@@ -16,6 +16,14 @@ class sint_t {
         int64_t store;
 
     public:
+        // debug facility
+        mutable int cntr_op_equal = 0;
+        mutable int cntr_op_spaceship = 0;
+        void reset_counter() const noexcept {
+            cntr_op_equal = 0;
+            cntr_op_spaceship = 0;
+        }
+
         /** Default constructor (ctor) */
         sint_t() noexcept
         : store(0) { }
@@ -53,13 +61,16 @@ class sint_t {
         }
 
         /** Two way comparison operator */
-        bool operator==(const sint_t& b) {
+        bool operator==(const sint_t& b) const noexcept {
+            ++cntr_op_equal;
             return store == b.store;
         }
 
         /** Three way std::strong_ordering comparison operator */
-        std::strong_ordering operator<=>(const sint_t& b) {
-            return store == b.store ? std::strong_ordering::equal : ( store < b.store ? std::strong_ordering::less : std::strong_ordering::greater);
+        std::strong_ordering operator<=>(const sint_t& b) const noexcept {
+            ++cntr_op_spaceship;
+            return store == b.store ? std::strong_ordering::equal :
+                                      ( store < b.store ? std::strong_ordering::less : std::strong_ordering::greater );
         }
 
         //
@@ -204,13 +215,24 @@ int main(int, char*[]) {
     //
     // Comparison operations
     //
-    assert( ten    <  twenty );
-    assert( ten    <= ten );
-    assert( ten    <= twenty );
-    assert( ten    == ten );
-    assert( twenty >  ten );
-    assert( twenty >= ten );
-    assert( twenty >= twenty );
+    ten.reset_counter();
+    twenty.reset_counter();
+    assert( ten    == ten );    // operator==
+    assert( ten    != twenty ); // operator==
+    assert( 2 == ten.cntr_op_equal );
+    assert( ten    <  twenty ); // operator<=>
+    assert( ten    <= ten );    // operator<=>
+    assert( ten    <= twenty ); // operator<=>
+    assert( 2 == ten.cntr_op_equal );
+    assert( 3 == ten.cntr_op_spaceship );
+
+    assert( twenty >  ten );    // operator<=>
+    assert( twenty >= ten );    // operator<=>
+    assert( twenty >= twenty ); // operator<=>
+    assert( 2 == ten.cntr_op_equal );
+    assert( 3 == ten.cntr_op_spaceship );
+    assert( 0 == twenty.cntr_op_equal );
+    assert( 3 == twenty.cntr_op_spaceship );
 
     //
     // Assignment operations, including arithmetic assignments
