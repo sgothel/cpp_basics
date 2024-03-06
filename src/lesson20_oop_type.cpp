@@ -168,10 +168,10 @@ class sint_t {
         /** Pre-decrement unary operation */
         sint_t& operator--() noexcept { --store; return *this; }
 
-        /** Post-increment unary operation */
+        /** Post-increment unary operation, more expensive than pre counterpart. */
         sint_t  operator++(int) noexcept { sint_t x(*this); ++(*this); return x; }
 
-        /** Post-decrement unary operation */
+        /** Post-decrement unary operation, more expensive than pre counterpart. */
         sint_t  operator--(int) noexcept { sint_t x(*this); --(*this); return x; }
 
         //
@@ -325,7 +325,7 @@ int main(int, char*[]) {
 
     {
         sint_t t(ten);
-        assert( eleven  == ++t );
+        assert( eleven  == ++t ); // increments and returns *this
         assert( eleven  == t );
     }
     {
@@ -335,7 +335,7 @@ int main(int, char*[]) {
     }
     {
         sint_t t(ten);
-        assert( ten     == t++ );
+        assert( ten     == t++ ); // copies *this, increments and returns copy
         assert( eleven  == t );
     }
     {
