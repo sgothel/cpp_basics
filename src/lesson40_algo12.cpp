@@ -232,7 +232,7 @@ namespace hoare2 {
     using namespace impl_common;
 
     /**
-     * Hoare alike partitioning of range [b..e).
+     * Hoare alike quicksort of range [b..e).
      *
      * Difference to Hoare's partitioning is using dedicated loops for each side of the pivot
      * to move the element over to the other side.
@@ -240,43 +240,6 @@ namespace hoare2 {
      *
      * The pivot element is sorted in place and not included in the recursion like
      * Lumoto and Sedgewick but unlike Hoare.
-     *
-     * Quicksort by Tony Hoare in 1959, published 1961.
-     *
-     * @tparam V
-     * @param array
-     * @param b left start index, inclusive
-     * @param e right end index, exclusive
-     * @return pivot index
-     */
-    template<typename V>
-    size_t partition(std::vector<V>& array, size_t b, size_t e) {
-        // stick with using references for comparison, no copy
-        size_t l = (b + e - 1 ) / 2; // pivot index
-        for(size_t i = b; i < l; ) {
-            if( array[i] > array[l] ) {
-                array.insert(array.begin() + e, array[i]);
-                array.erase( array.begin() + i );
-                --l;
-            } else {
-                ++i;
-            }
-        }
-        for(size_t i = l+1; i < e; ) {
-            if( array[i] < array[l] ) {
-                array.insert(array.begin() + b, array[i]);
-                ++i;
-                ++l;
-                array.erase( array.begin() + i );
-            } else {
-                ++i;
-            }
-        }
-        return l;
-    }
-
-    /**
-     * Hoare alike quicksort of range [b..e).
      *
      * Quicksort by Tony Hoare in 1959, published 1961.
      *
