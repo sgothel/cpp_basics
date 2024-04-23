@@ -348,12 +348,13 @@ namespace hoare3 {
         if( e - b < 2 ) {
             return 0;
         }
+        // Partitioning:
+        // Stick with using references for comparison, no copy
         const size_t hi = e-1;
         size_t l = b + 1, g = hi - 1; // pivot points
         {
-            // partitioning incl pivot points: l + g
-            const V P = std::min(A[b], A[hi]); // Pivot 1
-            const V Q = std::max(A[b], A[hi]); // Pivot 2
+            const V& P = std::min(A[b], A[hi]); // Pivot 1, ref only
+            const V& Q = std::max(A[b], A[hi]); // Pivot 2, ref only
             size_t k = l;
             while (k <= g) {
                 if (A[k] < P) {
@@ -370,8 +371,17 @@ namespace hoare3 {
                 ++k;
             }
             --l; ++g;
-            A[b] = A[l]; A[l] = P;
-            A[hi] = A[g]; A[g] = Q;
+            {
+                // 2x 3-way swap using std::move
+                V t = std::move(P);
+                V u = std::move(Q);
+                // 1: A[b] = A[l]; A[l] = P;
+                A[b] = std::move(A[l]);
+                A[l] = std::move(t);
+                // 2: A[hi] = A[g]; A[g] = Q;
+                A[hi] = std::move(A[g]);
+                A[g] = std::move(u);
+            }
         }
 
         // Recursion
