@@ -96,7 +96,7 @@ namespace hoare0 {
      * @return number of partitioning
      */
     template<typename V>
-    size_t qsort(std::vector<V>& array, size_t b, size_t e) {
+    size_t qsort(std::vector<V>& A, size_t b, size_t e) {
         if( e - b < 2 ) {
             return 0;
         }
@@ -104,23 +104,24 @@ namespace hoare0 {
         // Stick with using references for comparison, no copy
         size_t l=b;   // left index
         size_t r=e-1; // right index -> pivot point
+        const V& p = A[b]; // Pivot, ref only
         while( true ) {
             // b -> low pivot index
-            while(array[l] < array[b]) { ++l; }
+            while(A[l] < p) { ++l; }
 
-            while(array[r] > array[b]) { --r; }
+            while(A[r] > p) { --r; }
 
             if(l >= r) {
                 break;
             }
-            std::swap(array[l], array[r]);
+            std::swap(A[l], A[r]);
         }
         // printVec(array, b, e, pivot);
 
         // Recursion:
         size_t c = 1;
-        c += qsort(array, b,   r+1); // left side of pivot, pivot included
-        c += qsort(array, r+1, e);   // right side of pivot
+        c += qsort(A, b,   r+1); // left side of pivot, pivot included
+        c += qsort(A, r+1, e);   // right side of pivot
         return c;
     }
     template<typename V>
@@ -145,7 +146,7 @@ namespace hoare1 {
      * @return number of partitioning
      */
     template<typename V>
-    size_t qsort(std::vector<V>& array, size_t b, size_t e) {
+    size_t qsort(std::vector<V>& A, size_t b, size_t e) {
         if( e - b < 2 ) {
             return 0;
         }
@@ -153,27 +154,28 @@ namespace hoare1 {
         // Stick with using references for comparison, no copy
         size_t l=b;   // left index  -> pivot-point
         size_t r=e-2; // right index
-        const size_t hi = e-1; // pivot index
+        const size_t hi = e-1;
+        const V& p = A[hi]; // Pivot, ref only
         while( true ) {
-            while(array[l] < array[hi]) { ++l; }
+            while(A[l] < p) { ++l; }
 
-            while(r > 0 && array[r] > array[hi]) { --r; }
+            while(r > 0 && A[r] > p) { --r; }
 
             // std::cout << ": [" << l << ".." << r << "]" << std::endl;
 
             if( r > l ) {
-                std::swap(array[l], array[r]);
+                std::swap(A[l], A[r]);
             } else {
-                std::swap(array[l], array[hi]); // move pivot to final position
+                std::swap(A[l], A[hi]); // move pivot to final position
                 break; // done
             }
         }
-        // printVec(array, b, e, pivot);
+        // printVec(A, b, e, pivot);
 
         // Recursion:
         size_t c = 1;
-        c += qsort(array, b,   l); // left side of pivot
-        c += qsort(array, l+1, e); // right side of pivot
+        c += qsort(A, b,   l); // left side of pivot
+        c += qsort(A, l+1, e); // right side of pivot
         return c;
     }
     template<typename V>
@@ -198,27 +200,28 @@ namespace lumoto {
      * @return number of partitioning
      */
     template<typename V>
-    size_t qsort(std::vector<V>& array, size_t b, size_t e) {
+    size_t qsort(std::vector<V>& A, size_t b, size_t e) {
         if( e - b < 2 ) {
             return 0;
         }
         // Partitioning:
         // Stick with using references for comparison, no copy
-        const size_t hi = e - 1; // pivot index
-        size_t l = b; // temp pivot index
+        const size_t hi = e - 1;
+        const V& p = A[hi]; // Pivot, ref only
+        size_t l = b; // pivot point
         for(size_t j = b; j < hi; ++j) {
-            if( array[j] <= array[hi] ) { // pivot value array[hi]
-                std::swap(array[l], array[j]);
+            if( A[j] <= p ) { // pivot value array[hi]
+                std::swap(A[l], A[j]);
                 ++l; // move temp pivot index forward
             }
         }
-        std::swap(array[l], array[hi]); // move pivot to final position
+        std::swap(A[l], A[hi]); // move pivot to final position
         // printVec(array, b, e, pivot);
 
         // Recursion:
         size_t c = 1;
-        c += qsort(array, b,   l); // left side of pivot
-        c += qsort(array, l+1, e); // right side of pivot
+        c += qsort(A, b,   l); // left side of pivot
+        c += qsort(A, l+1, e); // right side of pivot
         return c;
     }
     template<typename V>
@@ -250,29 +253,29 @@ namespace hoare2 {
      * @return number of partitioning
      */
     template<typename V>
-    size_t qsort(std::vector<V>& array, size_t b, size_t e) {
+    size_t qsort(std::vector<V>& A, size_t b, size_t e) {
         if( e - b < 2 ) {
             return 0;
         }
-        array.reserve( array.size() + 1 );
+        A.reserve( A.size() + 1 );
         // Partitioning:
         // Stick with using references for comparison, no copy
-        size_t l = (b + e - 1 ) / 2; // pivot index
+        size_t l = (b + e - 1 ) / 2; // pivot point
         for(size_t i = b; i < l; ) {
-            if( array[i] > array[l] ) {
-                array.insert(array.begin() + e, array[i]);
-                array.erase( array.begin() + i );
+            if( A[i] > A[l] ) {
+                A.insert(A.begin() + e, A[i]);
+                A.erase( A.begin() + i );
                 --l;
             } else {
                 ++i;
             }
         }
         for(size_t i = l+1; i < e; ) {
-            if( array[i] < array[l] ) {
-                array.insert(array.begin() + b, array[i]);
+            if( A[i] < A[l] ) {
+                A.insert(A.begin() + b, A[i]);
                 ++i;
                 ++l;
-                array.erase( array.begin() + i );
+                A.erase( A.begin() + i );
             } else {
                 ++i;
             }
@@ -281,8 +284,8 @@ namespace hoare2 {
 
         // Recursion:
         size_t c = 1;
-        c += qsort(array, b,   l); // left side of pivot
-        c += qsort(array, l+1, e); // right side of pivot
+        c += qsort(A, b,   l); // left side of pivot
+        c += qsort(A, l+1, e); // right side of pivot
         return c;
     }
     template<typename V>
