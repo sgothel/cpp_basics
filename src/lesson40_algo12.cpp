@@ -353,35 +353,29 @@ namespace hoare3 {
         const size_t hi = e-1;
         size_t l = b + 1, g = hi - 1; // pivot points
         {
-            const V& P = std::min(A[b], A[hi]); // Pivot 1, ref only
-            const V& Q = std::max(A[b], A[hi]); // Pivot 2, ref only
+            if( A[b] > A[hi] ) {
+                std::swap(A[b], A[hi]);
+            }
+            const V& p = A[b];  // Pivot 1, ref only
+            const V& q = A[hi]; // Pivot 2, ref only
             size_t k = l;
             while (k <= g) {
-                if (A[k] < P) {
+                if (A[k] < p) {
                     std::swap(A[k], A[l]); ++l;
-                } else if( A[k] >= Q ) {
-                    while( A[g] > Q && k < g ) {
+                } else if( A[k] >= q ) {
+                    while( A[g] > q && k < g ) {
                      --g;
                     }
                     std::swap(A[k], A[g]); --g;
-                    if( A[k] < P ) {
+                    if( A[k] < p ) {
                         std::swap(A[k], A[l]); ++l;
                     }
                 }
                 ++k;
             }
             --l; ++g;
-            {
-                // 2x 3-way swap using std::move
-                V t = std::move(P);
-                V u = std::move(Q);
-                // 1: A[b] = A[l]; A[l] = P;
-                A[b] = std::move(A[l]);
-                A[l] = std::move(t);
-                // 2: A[hi] = A[g]; A[g] = Q;
-                A[hi] = std::move(A[g]);
-                A[g] = std::move(u);
-            }
+            std::swap(A[b],  A[l]);
+            std::swap(A[hi], A[g]);
         }
 
         // Recursion
