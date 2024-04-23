@@ -85,37 +85,6 @@ namespace hoare0 {
     using namespace impl_common;
 
     /**
-     * Hoare partitioning of range [b..e).
-     *
-     * Quicksort by Tony Hoare in 1959, published 1961.
-     *
-     * @tparam V
-     * @param array
-     * @param b left start index, inclusive
-     * @param e right end index, exclusive
-     * @return pivot index
-     */
-    template<typename V>
-    size_t hoare_partition(std::vector<V>& array, size_t b, size_t e) {
-        // stick with using references for comparison, no copy
-        size_t lo = b; // pivot index
-
-        size_t l=b;   // left index
-        size_t r=e-1; // right index
-        while( true ) {
-            while(array[l] < array[lo]) { ++l; }
-
-            while(array[r] > array[lo]) { --r; }
-
-            if(l >= r) {
-                return r;
-            }
-            std::swap(array[l], array[r]);
-        }
-        return l;
-    }
-
-    /**
      * Hoare quicksort of range [b..e).
      *
      * Quicksort by Tony Hoare in 1959, published 1961.
@@ -131,11 +100,27 @@ namespace hoare0 {
         if( e - b < 2 ) {
             return 0;
         }
-        size_t pivot = hoare_partition<V>(array, b, e);
+        // Partitioning:
+        // Stick with using references for comparison, no copy
+        size_t l=b;   // left index
+        size_t r=e-1; // right index -> pivot point
+        while( true ) {
+            // b -> low pivot index
+            while(array[l] < array[b]) { ++l; }
+
+            while(array[r] > array[b]) { --r; }
+
+            if(l >= r) {
+                break;
+            }
+            std::swap(array[l], array[r]);
+        }
         // printVec(array, b, e, pivot);
+
+        // Recursion:
         size_t c = 1;
-        c += qsort(array, b, pivot+1); // left side of pivot, pivot included
-        c += qsort(array, pivot+1, e); // right side of pivot
+        c += qsort(array, b,   r+1); // left side of pivot, pivot included
+        c += qsort(array, r+1, e);   // right side of pivot
         return c;
     }
     template<typename V>
@@ -147,40 +132,6 @@ namespace hoare0 {
 namespace hoare1 {
 
     using namespace impl_common;
-
-    /**
-     * Hoare-Sedgewick partitioning of range [b..e).
-     *
-     * Quicksort by Tony Hoare in 1959, published 1961.
-     *
-     * @tparam V
-     * @param array
-     * @param b left start index, inclusive
-     * @param e right end index, exclusive
-     * @return pivot index
-     */
-    template<typename V>
-    size_t sedgewick_partition(std::vector<V>& array, size_t b, size_t e) {
-        // stick with using references for comparison, no copy
-        size_t hi = e-1; // pivot index
-
-        size_t l=b;   // left index
-        size_t r=e-2; // right index
-        while( true ) {
-            while(array[l] < array[hi]) { ++l; }
-
-            while(r > 0 && array[r] > array[hi]) { --r; }
-
-            // std::cout << ": [" << l << ".." << r << "]" << std::endl;
-
-            if( r > l ) {
-                std::swap(array[l], array[r]);
-            } else {
-                std::swap(array[l], array[hi]); // move pivot to final position
-                return l;
-            }
-        }
-    }
 
     /**
      * Hoare-Sedgewick quicksort of range [b..e).
@@ -198,11 +149,31 @@ namespace hoare1 {
         if( e - b < 2 ) {
             return 0;
         }
-        size_t pivot = sedgewick_partition<V>(array, b, e);
+        // Partitioning:
+        // Stick with using references for comparison, no copy
+        size_t l=b;   // left index  -> pivot-point
+        size_t r=e-2; // right index
+        const size_t hi = e-1; // pivot index
+        while( true ) {
+            while(array[l] < array[hi]) { ++l; }
+
+            while(r > 0 && array[r] > array[hi]) { --r; }
+
+            // std::cout << ": [" << l << ".." << r << "]" << std::endl;
+
+            if( r > l ) {
+                std::swap(array[l], array[r]);
+            } else {
+                std::swap(array[l], array[hi]); // move pivot to final position
+                break; // done
+            }
+        }
         // printVec(array, b, e, pivot);
+
+        // Recursion:
         size_t c = 1;
-        c += qsort(array, b, pivot);   // left side of pivot
-        c += qsort(array, pivot+1, e); // right side of pivot
+        c += qsort(array, b,   l); // left side of pivot
+        c += qsort(array, l+1, e); // right side of pivot
         return c;
     }
     template<typename V>
@@ -214,33 +185,6 @@ namespace hoare1 {
 namespace lumoto {
 
     using namespace impl_common;
-
-    /**
-     * Lomuto partitioning of range [b..e).
-     *
-     * Quicksort by Tony Hoare in 1959, published 1961.
-     *
-     * @tparam V
-     * @param array
-     * @param b left start index, inclusive
-     * @param e right end index, exclusive
-     * @return pivot index
-     */
-    template<typename V>
-    size_t lumoto_partition(std::vector<V>& array, size_t b, size_t e) {
-        // stick with using references for comparison, no copy
-        const size_t hi = e - 1; // pivot index
-        size_t i = b; // temp pivot index
-
-        for(size_t j = b; j < hi; ++j) {
-            if( array[j] <= array[hi] ) { // pivot value array[hi]
-                std::swap(array[i], array[j]);
-                ++i; // move temp pivot index forward
-            }
-        }
-        std::swap(array[i], array[hi]); // move pivot to final position
-        return i; // pivot index
-    }
 
     /**
      * Hoare-Lomuto quicksort of range [b..e).
@@ -258,11 +202,23 @@ namespace lumoto {
         if( e - b < 2 ) {
             return 0;
         }
-        size_t pivot = lumoto_partition<V>(array, b, e);
+        // Partitioning:
+        // Stick with using references for comparison, no copy
+        const size_t hi = e - 1; // pivot index
+        size_t l = b; // temp pivot index
+        for(size_t j = b; j < hi; ++j) {
+            if( array[j] <= array[hi] ) { // pivot value array[hi]
+                std::swap(array[l], array[j]);
+                ++l; // move temp pivot index forward
+            }
+        }
+        std::swap(array[l], array[hi]); // move pivot to final position
         // printVec(array, b, e, pivot);
+
+        // Recursion:
         size_t c = 1;
-        c += qsort(array, b, pivot);   // left side of pivot
-        c += qsort(array, pivot+1, e); // right side of pivot
+        c += qsort(array, b,   l); // left side of pivot
+        c += qsort(array, l+1, e); // right side of pivot
         return c;
     }
     template<typename V>
@@ -296,27 +252,27 @@ namespace hoare2 {
     template<typename V>
     size_t partition(std::vector<V>& array, size_t b, size_t e) {
         // stick with using references for comparison, no copy
-        size_t p_idx = (b + e - 1 ) / 2; // pivot index
-        for(size_t i = b; i < p_idx; ) {
-            if( array[i] > array[p_idx] ) {
+        size_t l = (b + e - 1 ) / 2; // pivot index
+        for(size_t i = b; i < l; ) {
+            if( array[i] > array[l] ) {
                 array.insert(array.begin() + e, array[i]);
                 array.erase( array.begin() + i );
-                --p_idx;
+                --l;
             } else {
                 ++i;
             }
         }
-        for(size_t i = p_idx+1; i < e; ) {
-            if( array[i] < array[p_idx] ) {
+        for(size_t i = l+1; i < e; ) {
+            if( array[i] < array[l] ) {
                 array.insert(array.begin() + b, array[i]);
                 ++i;
-                ++p_idx;
+                ++l;
                 array.erase( array.begin() + i );
             } else {
                 ++i;
             }
         }
-        return p_idx;
+        return l;
     }
 
     /**
@@ -336,11 +292,93 @@ namespace hoare2 {
             return 0;
         }
         array.reserve( array.size() + 1 );
-        size_t pivot = partition<V>(array, b, e);
+        // Partitioning:
+        // Stick with using references for comparison, no copy
+        size_t l = (b + e - 1 ) / 2; // pivot index
+        for(size_t i = b; i < l; ) {
+            if( array[i] > array[l] ) {
+                array.insert(array.begin() + e, array[i]);
+                array.erase( array.begin() + i );
+                --l;
+            } else {
+                ++i;
+            }
+        }
+        for(size_t i = l+1; i < e; ) {
+            if( array[i] < array[l] ) {
+                array.insert(array.begin() + b, array[i]);
+                ++i;
+                ++l;
+                array.erase( array.begin() + i );
+            } else {
+                ++i;
+            }
+        }
         // printVec(array, b, e, pivot);
+
+        // Recursion:
         size_t c = 1;
-        c += qsort(array, b, pivot);   // left side of pivot
-        c += qsort(array, pivot+1, e); // right side of pivot
+        c += qsort(array, b,   l); // left side of pivot
+        c += qsort(array, l+1, e); // right side of pivot
+        return c;
+    }
+    template<typename V>
+    size_t qsort(std::vector<V>& array) {
+        return qsort(array, 0, array.size());
+    }
+}
+
+namespace hoare3 {
+
+    using namespace impl_common;
+
+    /**
+     * Hoare-Yaroslavskiy dual-pivot quicksort of range [b..e).
+     *
+     * Quicksort by Tony Hoare in 1959, published 1961.
+     *
+     * @tparam V
+     * @param array
+     * @param b left start index, inclusive
+     * @param e right end index, exclusive
+     * @return number of partitioning
+     */
+    template<typename V>
+    size_t qsort(std::vector<V>& A, size_t b, size_t e) {
+        if( e - b < 2 ) {
+            return 0;
+        }
+        const size_t hi = e-1;
+        size_t l = b + 1, g = hi - 1; // pivot points
+        {
+            // partitioning incl pivot points: l + g
+            const V P = std::min(A[b], A[hi]); // Pivot 1
+            const V Q = std::max(A[b], A[hi]); // Pivot 2
+            size_t k = l;
+            while (k <= g) {
+                if (A[k] < P) {
+                    std::swap(A[k], A[l]); ++l;
+                } else if( A[k] >= Q ) {
+                    while( A[g] > Q && k < g ) {
+                     --g;
+                    }
+                    std::swap(A[k], A[g]); --g;
+                    if( A[k] < P ) {
+                        std::swap(A[k], A[l]); ++l;
+                    }
+                }
+                ++k;
+            }
+            --l; ++g;
+            A[b] = A[l]; A[l] = P;
+            A[hi] = A[g]; A[g] = Q;
+        }
+
+        // Recursion
+        size_t c = 1;
+        c += qsort(A, b,   l); // 1st segment, ex-pivot
+        c += qsort(A, l+1, g); // 2nd segment, ex-pivot
+        c += qsort(A, g+1, e); // 3rd segment, ex-pivot
         return c;
     }
     template<typename V>
@@ -378,6 +416,7 @@ void test_qsort(const std::string& prefix, test_vector_t has, const test_vector_
     test_qsort("qsort-hoare_sedg-"+prefix, hoare1::qsort, has, exp);
     test_qsort("qsort-hoare_tony-"+prefix, hoare0::qsort, has, exp);
     test_qsort("qsort-lumoto____-"+prefix, lumoto::qsort, has, exp);
+    test_qsort("qsort-hoare_yaro-"+prefix, hoare3::qsort, has, exp);
 }
 
 int main() {
