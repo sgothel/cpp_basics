@@ -62,12 +62,13 @@ set (GCC_FLAGS_SANITIZE_THREAD "-fsanitize-address-use-after-scope -fsanitize=un
 # -fsanitize=pointer-compare -fsanitize=pointer-subtract must be combined with -fsanitize=address
 # -fsanitize=thread TSAN's lacks ability to properly handle GCC's atomic macros (like helgrind etc), can't check SC-DRF!
 
-if(CMAKE_COMPILER_IS_GNUCC)
+message(STATUS "CXX ${CMAKE_CXX_COMPILER_ID}")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # shorten __FILE__ string and the like ..
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_FLAGS_WARNING} ${GCC_FLAGS_WARNING_NO_ERROR} -fmacro-prefix-map=${CMAKE_SOURCE_DIR}/=/")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CC_FLAGS_WARNING}")
-endif(CMAKE_COMPILER_IS_GNUCC)
+endif()
 
 message(STATUS "${PROJECT_NAME} USE_STRIP = ${USE_STRIP} (pre-set)")
 

@@ -20,18 +20,18 @@ C++20 and better.
   - gcc >= 10
   - clang >= 15
 - Optional for `lint` validation
-  - clang-tidy >= 15
-- Optional for `vscodium` integration
-  - clangd >= 15
-  - clang-tools >= 15
-  - clang-format >= 15
+  - clang-tidy >= 16
+- Optional for `eclipse` and `vscodium` integration
+  - clangd >= 16
+  - clang-tools >= 16
+  - clang-format >= 16
 
 
 Installing build dependencies on Debian (11 or better):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.sh}
 apt install git
 apt install build-essential g++ gcc libc-dev libpthread-stubs0-dev 
-apt install clang-15 clang-tidy-15 clangd-15 clang-tools-15 clang-format-15
+apt install clang-16 clang-tidy-16 clangd-16 clang-tools-16 clang-format-16
 apt install cmake cmake-extras extra-cmake-modules pkg-config
 apt install doxygen graphviz
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,6 +81,11 @@ make doc
 IDE integration configuration files are provided for 
 - [Eclipse](https://download.eclipse.org/eclipse/downloads/) with extensions
   - [CDT](https://github.com/eclipse-cdt/) or [CDT @ eclipse.org](https://projects.eclipse.org/projects/tools.cdt)
+  - [CDT-LSP](https://github.com/eclipse-cdt/cdt-lsp) *recommended*
+    - Should work with clang toolchain >= 16
+    - Utilizes clangd, clang-tidy and clang-format to support C++20 and above
+    - Add to available software site: `https://download.eclipse.org/tools/cdt/releases/cdt-lsp-latest`
+    - Install `C/C++ LSP Support` in the `Eclipse CDT LSP Category`
   - `CMake Support`, install `C/C++ CMake Build Support` with ID `org.eclipse.cdt.cmake.feature.group`
 
 You can import the project to your workspace via `File . Import...` and `Existing Projects into Workspace` menu item.
