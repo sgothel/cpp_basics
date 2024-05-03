@@ -53,12 +53,12 @@ ssize_t binary_search00(const std::vector<int>& array, int target_value) {
     //
     // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
     // aka size_t and mentioned iterator hence lose half the value range possible?
-    typedef std::vector<int>::difference_type iterint_t;
-    iterint_t l = 0;
-    iterint_t h = array.cend() - array.cbegin() - 1;    
-    iterint_t c = 0;
+    typedef std::vector<int>::difference_type iterdiff_t;
+    iterdiff_t l = 0;
+    iterdiff_t h = array.cend() - array.cbegin() - 1;    
+    iterdiff_t c = 0;
     while( l <= h ) {
-        iterint_t i = ( l + h ) / 2;
+        iterdiff_t i = ( l + h ) / 2;
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i + 1;
