@@ -51,7 +51,7 @@ class sint_t {
 
         /** Move ctor */
         sint_t(sint_t&& o) noexcept
-        : id( std::move(o.id) ), store( std::move(o.store) ) {
+        : id( o.id ), store( o.store ) {
             std::cout << "ctor.move: " << o << " -> " << *this << ", old ";
             o.id = 0;
             std::cout << o << std::endl;
@@ -152,7 +152,7 @@ int main(int, const char* []) {
     {
         sint_t a = make_obj(1);
         std::cout << "b3.a: " << a << std::endl;
-        sint_t b = std::move( make_obj(2) );
+        sint_t b = make_obj(2) ;
         std::cout << "b3.b: " << b << std::endl;
 
         // ctor.conv: 1 -> [id 5, val 1]
@@ -168,7 +168,7 @@ int main(int, const char* []) {
         std::cout << "b4.0.b: " << b << std::endl;
         a = std::move( b ); // b should not be dereferenced after move
         std::cout << "b4.1.a: " << a << std::endl;
-        a = std::move( make_obj(3) );
+        a = make_obj(3) ;
         std::cout << "b4.2.a: " << a << std::endl;
 
         // ctor.norm: [id 7, val 0]

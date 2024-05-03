@@ -30,10 +30,10 @@ namespace test_env {
 
         public:
             constexpr ValueType() noexcept
-            : store(0) { }
+            : store(0) {}
 
             constexpr ValueType(int64_t v) noexcept
-            : store(v) { }
+            : store(v) {}
 
             constexpr ValueType(const ValueType& o) noexcept = default;
             constexpr ValueType(ValueType&& o) noexcept = default;
@@ -381,7 +381,7 @@ void test_qsort(const std::string& prefix, qsort_func qsort, test_vector_t has, 
     dumpVec(prefix+"b", c, has);
     assert( exp == has );
 }
-void test_qsort(const std::string& prefix, test_vector_t has, const test_vector_t& exp) {
+void test_qsort(const std::string& prefix, const test_vector_t& has, const test_vector_t& exp) {
     test_qsort("qsort-hoare_goth-"+prefix, hoare2::qsort, has, exp);
     test_qsort("qsort-hoare_sedg-"+prefix, hoare1::qsort, has, exp);
     test_qsort("qsort-hoare_tony-"+prefix, hoare0::qsort, has, exp);

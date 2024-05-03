@@ -71,10 +71,10 @@ class creature_t {
 
     protected:
         /** Fully virtual copy-ctor function (asexual) on this super class */
-        virtual std::shared_ptr<creature_t> new_instance() noexcept = 0;
+        virtual std::shared_ptr<creature_t> new_instance() = 0;
 
         /** Fully virtual copy-ctor function (sexual) on this super class */
-        virtual std::shared_ptr<creature_t> new_instance(const creature_t& o) noexcept = 0;
+        virtual std::shared_ptr<creature_t> new_instance(const creature_t& o) = 0;
 
     public:
         /** create one offspring (asexual) if childs_left() > 0 and repro_type() is not repro_t::sexual, otherwise returns nullptr. */
@@ -139,7 +139,7 @@ std::atomic_uint64_t creature_t::next_instance;
 typedef std::shared_ptr<creature_t> shared_creature_t;
 
 std::ostream& operator<<(std::ostream& out, const creature_t& v) {
-    return out << v.to_string();
+    return out << v.to_string(); // NOLINT(bugprone-use-after-move, clang-analyzer-cplusplus.Move): intentional visualization
 }
 
 /**
@@ -155,27 +155,26 @@ class plant_t : public creature_t {
         plant_t(plant_t&& o) noexcept
         : creature_t(std::move(o)) {}
 
-        virtual repro_t repro_type() const noexcept override { return repro_t::dual; }
+        repro_t repro_type() const noexcept override { return repro_t::dual; }
 
         /** Virtual to_string() override  */
-        virtual std::string to_string() const noexcept override { return "plant"+lifesign()+"["+creature_t::to_substring()+"]"; }
+        std::string to_string() const noexcept override { return "plant"+lifesign()+"["+creature_t::to_substring()+"]"; }
 
     protected:
         /** Copy ctor, actually creating a new life (asexual) w/ a new instance id() */
-        plant_t(const plant_t& o) noexcept
-        : creature_t(o) { }
+        plant_t(const plant_t& o) noexcept = default;
 
         /** Copy ctor, actually creating a new life (sexual) w/ a new instance id() */
         plant_t(const plant_t& a, const plant_t& b) noexcept
         : creature_t(a, b) { }
 
         /** Virtual new_copy() (asexual) override  */
-        virtual std::shared_ptr<creature_t> new_instance() noexcept override {
+        std::shared_ptr<creature_t> new_instance() override {
             return std::shared_ptr<plant_t>( new plant_t(*this) );
         }
 
         /** Virtual new_instance() (sexual) override */
-        virtual std::shared_ptr<creature_t> new_instance(const creature_t& o) noexcept override {
+        std::shared_ptr<creature_t> new_instance(const creature_t& o) override {
             return std::shared_ptr<plant_t>( new plant_t(*this, *static_cast<const plant_t*>(&o)) );
         }
 };
@@ -193,26 +192,25 @@ class animal_t : public creature_t {
         animal_t(animal_t&& o) noexcept
         : creature_t(std::move(o)) {}
 
-        virtual repro_t repro_type() const noexcept override { return repro_t::sexual; }
+        repro_t repro_type() const noexcept override { return repro_t::sexual; }
 
         /** Virtual to_string() override  */
-        virtual std::string to_string() const noexcept override { return "animal"+lifesign()+"["+creature_t::to_substring()+"]"; }
+        std::string to_string() const noexcept override { return "animal"+lifesign()+"["+creature_t::to_substring()+"]"; }
 
     protected:
         /** Copy ctor, actually creating a new life (asexual) w/ a new instance id() */
-        animal_t(const animal_t& o) noexcept
-        : creature_t(o) { }
+        animal_t(const animal_t& o) noexcept = default;
 
         /** Copy ctor, actually creating a new life (sexual) w/ a new instance id() */
         animal_t(const animal_t& a, const animal_t& b) noexcept
         : creature_t(a, b) { }
 
         /** Virtual new_copy() (asexual) override - returns nullptr  */
-        virtual std::shared_ptr<creature_t> new_instance() noexcept override {
+        std::shared_ptr<creature_t> new_instance() noexcept override {
             return std::shared_ptr<animal_t>();
         }
         /** Virtual new_instance() (sexual) override */
-        virtual std::shared_ptr<creature_t> new_instance(const creature_t& o) noexcept override {
+        std::shared_ptr<creature_t> new_instance(const creature_t& o) override {
             return std::shared_ptr<animal_t>( new animal_t(*this, *static_cast<const animal_t*>(&o)) );
         }
 };
@@ -269,7 +267,7 @@ int main(int, char*[]) {
             assert( 0 < a12childs.size() );
         }
         std::cout << "00.a12 = " << *a12 << ", created "+std::to_string(a12childs.size()) << std::endl;
-        for(shared_creature_t c : a12childs) {
+        for(const shared_creature_t& c : a12childs) {
             std::cout << "00.a12.c = " << *c << std::endl;
         }
         a12->tick(60);
@@ -283,12 +281,12 @@ int main(int, char*[]) {
     {
         animal_t a3(80, 4);
         animal_t a3b(std::move(a3));
-        std::cout << "00.a3 = " << a3 << " -> " << a3b << std::endl;
+        std::cout << "00.a3 = " << a3 << " -> " << a3b << std::endl; // NOLINT(bugprone-use-after-move, clang-analyzer-cplusplus.Move): intentional visualization
     }
     {
         animal_t a3(80, 4);
         animal_t a3b = std::move(a3);
-        std::cout << "00.a3 = " << a3 << " -> " << a3b << std::endl;
+        std::cout << "00.a3 = " << a3 << " -> " << a3b << std::endl; // NOLINT(bugprone-use-after-move, clang-analyzer-cplusplus.Move): intentional visualization
     }
 
     return 0;

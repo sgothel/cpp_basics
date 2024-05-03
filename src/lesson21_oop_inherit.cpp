@@ -71,8 +71,7 @@ class plant_t : public creature_t {
         : creature_t(to_string_impl, lifetime_left) {}
 
         /** Copy ctor */
-        plant_t(const plant_t& o) noexcept
-        : creature_t(o) { }
+        plant_t(const plant_t& o) noexcept = default;
 
     private:
         static std::string to_string_impl(const creature_t& t) noexcept {

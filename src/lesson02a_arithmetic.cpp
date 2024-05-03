@@ -91,6 +91,7 @@ float machineEpsilon() {
         // std::cerr << i << ": " << res << " -> " << x << std::endl;
         ++i;
     } while ( one + x  > one );
+    (void)i;
     return res;
 }
 

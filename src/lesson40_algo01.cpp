@@ -20,7 +20,7 @@
  */
 
 typedef ssize_t (*binary_search_func0_t)(const std::vector<int>& array, int target_value);
-typedef  size_t (*binary_search_func1_t)(const std::vector<int>& array, int target_value);
+typedef size_t (*binary_search_func1_t)(const std::vector<int>& array, int target_value);
 
 bool test_binsearch0(binary_search_func0_t binary_search, const std::vector<int>& array, int target_value, ssize_t exp_idx, ssize_t& has_idx) {
     has_idx = binary_search(array, target_value);
@@ -31,7 +31,7 @@ bool test_binsearch0(binary_search_func0_t binary_search, const std::vector<int>
         return true;
     }
 }
-bool test_binsearch(binary_search_func1_t binary_search, const std::vector<int>& array, int target_value, size_t exp_idx, size_t& has_idx) {
+bool test_binsearch1(binary_search_func1_t binary_search, const std::vector<int>& array, int target_value, size_t exp_idx, size_t& has_idx) {
     has_idx = binary_search(array, target_value);
     if( exp_idx != has_idx ) {
         std::cerr << "Error: has " << has_idx << " != exp " << exp_idx << std::endl;
@@ -47,11 +47,18 @@ bool test_binsearch(binary_search_func1_t binary_search, const std::vector<int>&
 constexpr static const ssize_t no_index_0 = -1;
 
 ssize_t binary_search00(const std::vector<int>& array, int target_value) {
-    ssize_t l = 0;
-    ssize_t h = array.size()-1;
-    ssize_t c = 0;
+    // Because std::vector<>::begin() iterator performs arithmetic 
+    // using a signed difference_type, we need to use such a signed type 
+    // here to avoid `bugprone-narrowing-conversions` (LINT)
+    //
+    // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
+    // aka size_t and mentioned iterator hence lose half the value range possible?
+    typedef std::vector<int>::difference_type iterint_t;
+    iterint_t l = 0;
+    iterint_t h = array.cend() - array.cbegin() - 1;    
+    iterint_t c = 0;
     while( l <= h ) {
-        ssize_t i = ( l + h ) / 2;
+        iterint_t i = ( l + h ) / 2;
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i + 1;
@@ -121,7 +128,14 @@ size_t binary_search11(const std::vector<int>& array, int target_value) {
 }
 
 void test_binsearch0(binary_search_func0_t binary_search, std::vector<int>& array_in, std::vector<int>& array_miss, int line) {
-    for(size_t i=0; i < array_in.size(); ++i) {
+    // Because std::vector<>::begin() iterator performs arithmetic 
+    // using a signed difference_type, we need to use such a signed type 
+    // here to avoid `bugprone-narrowing-conversions` (LINT)
+    //
+    // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
+    // aka size_t and mentioned iterator hence lose half the value range possible?
+    const ssize_t ain_sz = array_in.cend() - array_in.cbegin();
+    for(ssize_t i=0; i < ain_sz; ++i) {
         ssize_t idx;
         if( !test_binsearch0(binary_search, array_in, array_in[i], i, idx) ) {
             std::cout << "ERROR-1 @ " << line << ": array_in[" << i << "] = " << array_in[i] << " found at " << idx << std::endl;
@@ -130,24 +144,24 @@ void test_binsearch0(binary_search_func0_t binary_search, std::vector<int>& arra
             std::cout << "OK   : array_in[" << i << "] = " << array_in[i] << " found at " << idx << std::endl;
         }
     }
-    {
-        for(size_t i=0; i < array_miss.size(); ++i) {
-            const int target = array_miss[i];
-            ssize_t idx;
-            if( !test_binsearch0(binary_search, array_in, target, no_index_0, idx) ) {
-                std::cout << "ERROR-2: " << target << " found at " << idx << std::endl;
-                assert(false);
-            } else {
-                std::cout << "OK   : " << target << " not found, idx " << idx << std::endl;
-            }
+    
+    const ssize_t amiss_sz = array_miss.cend() - array_miss.cbegin();
+    for(ssize_t i=0; i < amiss_sz; ++i) {
+        const int target = array_miss[i];
+        ssize_t idx;
+        if( !test_binsearch0(binary_search, array_in, target, no_index_0, idx) ) {
+            std::cout << "ERROR-2: " << target << " found at " << idx << std::endl;
+            assert(false);
+        } else {
+            std::cout << "OK   : " << target << " not found, idx " << idx << std::endl;
         }
     }
 }
 
-void test_binsearch(binary_search_func1_t binary_search, std::vector<int>& array_in, std::vector<int>& array_miss, int line) {
+void test_binsearch1(binary_search_func1_t binary_search, std::vector<int>& array_in, std::vector<int>& array_miss, int line) {
     for(size_t i=0; i < array_in.size(); ++i) {
         size_t idx;
-        if( !test_binsearch(binary_search, array_in, array_in[i], i, idx) ) {
+        if( !test_binsearch1(binary_search, array_in, array_in[i], i, idx) ) {
             std::cout << "ERROR-1 @ " << line << ": array_in[" << i << "] = " << array_in[i] << " found at " << idx << std::endl;
             assert(false);
         } else {
@@ -158,7 +172,7 @@ void test_binsearch(binary_search_func1_t binary_search, std::vector<int>& array
         for(size_t i=0; i < array_miss.size(); ++i) {
             const int target = array_miss[i];
             size_t idx;
-            if( !test_binsearch(binary_search, array_in, target, no_index, idx) ) {
+            if( !test_binsearch1(binary_search, array_in, target, no_index, idx) ) {
                 std::cout << "ERROR-2: " << target << " found at " << idx << std::endl;
                 assert(false);
             } else {
@@ -182,13 +196,13 @@ int main(int, const char**) {
     }
     // test impl10
     {
-        test_binsearch(binary_search10, array1_in, array1_miss, __LINE__);
-        test_binsearch(binary_search10, array2_in, array2_miss, __LINE__);
+        test_binsearch1(binary_search10, array1_in, array1_miss, __LINE__);
+        test_binsearch1(binary_search10, array2_in, array2_miss, __LINE__);
     }
     // test impl11
     {
-        test_binsearch(binary_search11, array1_in, array1_miss, __LINE__);
-        test_binsearch(binary_search11, array2_in, array2_miss, __LINE__);
+        test_binsearch1(binary_search11, array1_in, array1_miss, __LINE__);
+        test_binsearch1(binary_search11, array2_in, array2_miss, __LINE__);
     }
     return 0;
 }

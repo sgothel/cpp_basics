@@ -30,14 +30,14 @@ class sint_t {
 
         /** Copy ctor */
         sint_t(const sint_t& o) noexcept
-        : store(o.store) { }
+        : store(o.store) {}
 
         /** Destructor (dtor) */
-        ~sint_t() noexcept {}
+        ~sint_t() noexcept = default;
 
         /** Explicit conversion ctor: int64_t -> my_int_t */
         explicit sint_t(const int64_t& o) noexcept
-        : store( o ) { }
+        : store(o) {}
 
         //
         // Logical operations
@@ -232,6 +232,7 @@ int main(int, char*[]) {
     {
         const sint_t a(2), b(3);
         const sint_t c = a + b;
+        (void)c;
         // a += b; // error: passing ‘const sint_t’ as ‘this’ argument discards qualifiers
     }
     if( ten ) {

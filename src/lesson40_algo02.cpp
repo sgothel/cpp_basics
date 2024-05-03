@@ -45,15 +45,23 @@ size_t binary_search(const std::vector<int>& array, int target_value) {
         }
         ++c;
     }
+    (void)c;
     return no_index;
 }
 size_t ordered_insert(std::vector<int>& array, int value) {
     if( array.size() < 1 ) {
         array.push_back(value);
         return 0;
-    }
-    size_t l = 0;
-    size_t h = array.size()-1;
+    }    
+    // Because std::vector<>::begin() iterator performs arithmetic 
+    // using a signed difference_type, we need to use such a signed type 
+    // here to avoid `bugprone-narrowing-conversions` (LINT)
+    //
+    // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
+    // aka size_t and mentioned iterator hence lose half the value range possible?
+    typedef std::vector<int>::difference_type iterint_t;
+    iterint_t l = 0;
+    iterint_t h = array.cend() - array.cbegin() - 1;
     if ( array[l] >= value ) {
         array.insert(array.begin(), value);
         return l;
@@ -61,9 +69,14 @@ size_t ordered_insert(std::vector<int>& array, int value) {
         array.insert(array.end(), value);
         return h+1;
     }
+    int lala[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    int* plala = &lala[0];
+    for(size_t i=0; i<9l; ++i) {
+        lala[i] = *(plala + i) + 1;
+    }
     // size_t c = 0;
     while( h - l >= 2 ) {
-        size_t i = ( l + h ) / 2;
+        iterint_t i = ( l + h ) / 2;
         // std::cout << "c " << c << " (" << l << ".." << h << "): p " << i << std::endl;
         if ( array[i] < value ) {
             l = i;

@@ -66,11 +66,10 @@ class plant_t : public creature_t {
         : creature_t(lifetime_left) {}
 
         /** Copy ctor */
-        plant_t(const plant_t& o) noexcept
-        : creature_t(o) { }
+        plant_t(const plant_t& o) noexcept = default;
 
         /** Virtual to_string() override  */
-        virtual std::string to_string() const noexcept override { return "plant"+lifesign()+"["+creature_t::to_substring()+"]"; }
+        std::string to_string() const noexcept override { return "plant"+lifesign()+"["+creature_t::to_substring()+"]"; }
 };
 
 class animal_t : public creature_t {
@@ -84,7 +83,7 @@ class animal_t : public creature_t {
         : creature_t(o) { }
 
         /** Virtual to_string() override  */
-        virtual std::string to_string() const noexcept override { return "animal"+lifesign()+"["+creature_t::to_substring()+"]"; }
+        std::string to_string() const noexcept override { return "animal"+lifesign()+"["+creature_t::to_substring()+"]"; }
 };
 
 int main(int, char*[]) {

@@ -47,8 +47,8 @@ long summe_loop( long a, long b){
  * @return
  */
 long summe_gaus( long a, long b ){
-   double n = b - a + 1;
-   double r = ( a + b ) * ( n / 2.0 );
+   double n = static_cast<double>(b - a + 1);
+   double r = static_cast<double>( a + b ) * ( n / 2.0 );
    return (long)r;
 }
 
