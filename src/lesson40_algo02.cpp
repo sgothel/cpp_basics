@@ -34,7 +34,8 @@ size_t binary_search(const std::vector<int>& array, int target_value) {
     }
     size_t c = 0;
     while( h - l >= 2 ) {
-        size_t i = ( l + h ) / 2;
+        // size_t i = ( l + h ) / 2; // l+h too big?
+        size_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h)
         // std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i;
@@ -71,7 +72,8 @@ size_t ordered_insert(std::vector<int>& array, int value) {
     }
     // size_t c = 0;
     while( h - l >= 2 ) {
-        iterdiff_t i = ( l + h ) / 2;
+        // iterdiff_t i = ( l + h ) / 2; // l+h too big?
+        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h) 
         // std::cout << "c " << c << " (" << l << ".." << h << "): p " << i << std::endl;
         if ( array[i] < value ) {
             l = i;

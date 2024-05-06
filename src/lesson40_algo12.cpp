@@ -260,7 +260,8 @@ namespace hoare2 {
         A.reserve( A.size() + 1 );
         // Partitioning:
         // Stick with using references for comparison, no copy
-        size_t l = (b + e - 1 ) / 2; // pivot point
+        // size_t l = ( b + e - 1 ) / 2; // pivot point - sum too big?
+        size_t l = b + ( e - 1 - b ) / 2; // pivot point - better, also solved with std::midpoint(b, e-1)
         for(size_t i = b; i < l; ) {
             if( A[i] > A[l] ) {
                 A.insert(A.begin() + e, A[i]);

@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <iostream>
 #include <cmath>
+#include <numeric>
 #include <vector>
 
 #include <limits>
@@ -58,7 +59,8 @@ ssize_t binary_search00(const std::vector<int>& array, int target_value) {
     iterdiff_t h = array.cend() - array.cbegin() - 1;    
     iterdiff_t c = 0;
     while( l <= h ) {
-        iterdiff_t i = ( l + h ) / 2;
+        // iterdiff_t i = ( l + h ) / 2; // l+h too big?
+        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h) 
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i + 1;
@@ -82,7 +84,8 @@ size_t binary_search10(const std::vector<int>& array, int target_value) {
     size_t h = array.size()-1;
     size_t c = 0;
     while( l <= h ) {
-        size_t i = ( l + h ) / 2;
+        // size_t i = ( l + h ) / 2; // l+h too big?
+        size_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h)
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i + 1;
@@ -113,7 +116,8 @@ size_t binary_search11(const std::vector<int>& array, int target_value) {
     }
     size_t c = 0;
     while( h - l >= 2 ) {
-        size_t i = ( l + h ) / 2;
+        // size_t i = ( l + h ) / 2; // l+h too big?
+        size_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h)
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i;
