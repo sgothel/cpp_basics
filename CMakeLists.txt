@@ -1,4 +1,11 @@
 cmake_minimum_required (VERSION 3.13.0 FATAL_ERROR)
+
+# Always enable debugging for our lessons, i.e. 'assert' etc
+set(CMAKE_BUILD_TYPE "Debug")
+
+include(JaulibSetup.cmake)
+JaulibPreset()
+
 project (cpp_basics LANGUAGES C CXX)
 
 if(${CMAKE_VERSION} VERSION_LESS "3.18.0")
@@ -19,11 +26,7 @@ else()
     message(STATUS "${PROJECT_NAME} DONT_USE_RTTI ${DONT_USE_RTTI} (user)")
 endif()
 
-# Always enable debugging for our lessons, i.e. 'assert' etc
-set(DEBUG ON)
-
-include(Setup.cmake)
-Setup()
+JaulibSetup()
 
 find_path (SYSTEM_USR_DIR "stdlib.h")
 include_directories (${SYSTEM_USR_DIR})
