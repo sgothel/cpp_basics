@@ -1,8 +1,4 @@
 cmake_minimum_required (VERSION 3.13.0 FATAL_ERROR)
-
-# Always enable debugging for our lessons, i.e. 'assert' etc
-set(CMAKE_BUILD_TYPE "Debug")
-
 include(JaulibSetup.cmake)
 JaulibPreset()
 
