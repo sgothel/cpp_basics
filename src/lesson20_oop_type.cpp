@@ -326,22 +326,22 @@ int main(int, char*[]) {
 
     {
         sint_t t(ten);
-        assert( eleven  == ++t ); // increments and returns *this
+        assert( eleven  == ++t ); // increments and returns *this; NOLINT(bugprone-assert-side-effect) intended 
         assert( eleven  == t );
     }
     {
         sint_t t(ten);
-        assert( nine    == --t );
+        assert( nine    == --t ); // NOLINT(bugprone-assert-side-effect) intended
         assert( nine    == t );
     }
     {
         sint_t t(ten);
-        assert( ten     == t++ ); // copies *this, increments and returns copy
+        assert( ten     == t++ ); // copies *this, increments and returns copy; NOLINT(bugprone-assert-side-effect) intended
         assert( eleven  == t );
     }
     {
         sint_t t(ten);
-        assert( ten     == t-- );
+        assert( ten     == t-- ); // NOLINT(bugprone-assert-side-effect) intended
         assert( nine    == t );
     }
 

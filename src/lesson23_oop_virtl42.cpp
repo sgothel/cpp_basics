@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-#include<iostream>
-
 /**
  * test01 demos inheritance of two OO trees (wrong utilization): 
  * - exception, runtime_error, system_error: Mimiks non-virtual inheritance of std::exception
@@ -49,7 +47,7 @@ namespace test01 {
                 std::cout<< "runtime_error::dtor: '" << msg0 << "'" <<std::endl;
             }
             
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "runtime_error::what("+msg0+")";
                 return s.c_str();
             }
@@ -68,7 +66,7 @@ namespace test01 {
             {
                 std::cout<< "system_error::dtor: '" << msg0 << "'" <<std::endl;
             }
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "system_error::what("+msg0+")";
                 return s.c_str();
             }
@@ -84,13 +82,13 @@ namespace test01 {
                 std::cout<< "ExceptionBase::ctor '" << msg1 << "'" <<std::endl;            
             }
             
-            virtual ~ExceptionBase() {
+            ~ExceptionBase() override {
                 std::cout<< "ExceptionBase::dtor '" << msg1 << "'" <<std::endl;            
             }
         
             const std::string& whole_message() const noexcept { return msg1; }
             
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "ExceptionBase::what("+msg1+")";
                 return s.c_str();
             }
@@ -113,7 +111,7 @@ namespace test01 {
         RuntimeException& operator=(const RuntimeException& o) = default;
         RuntimeException& operator=(RuntimeException&& o) = default;
         
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             static std::string s = "RuntimeException::what("+msg1+")";
             return s.c_str();
         }
@@ -136,7 +134,7 @@ namespace test01 {
         RuntimeSystemException& operator=(const RuntimeSystemException& o) = default;
         RuntimeSystemException& operator=(RuntimeSystemException&& o) = default;
         
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             static std::string s = "RuntimeSystemException::what("+msg1+")";
             return s.c_str();
         }
@@ -183,7 +181,7 @@ namespace test02 {
                 std::cout<< "runtime_error::dtor: '" << msg0 << "'" <<std::endl;
             }
             
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "runtime_error::what("+msg0+")";
                 return s.c_str();
             }
@@ -193,7 +191,7 @@ namespace test02 {
     class system_error : public virtual runtime_error {
         public:
             system_error(const std::string& m)
-            : runtime_error(m)
+            : runtime_error(m) // NOLINT(bugprone-throw-keyword-missing)
             {
                 std::cout<< "system_error::ctor: '" << msg0 << "'" <<std::endl;
             }
@@ -202,7 +200,7 @@ namespace test02 {
             {
                 std::cout<< "system_error::dtor: '" << msg0 << "'" <<std::endl;
             }
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "system_error::what("+msg0+")";
                 return s.c_str();
             }
@@ -218,13 +216,13 @@ namespace test02 {
                 std::cout<< "ExceptionBase::ctor '" << msg1 << "'" <<std::endl;            
             }
             
-            virtual ~ExceptionBase() {
+            ~ExceptionBase() override {
                 std::cout<< "ExceptionBase::dtor '" << msg1 << "'" <<std::endl;            
             }
         
             const std::string& whole_message() const noexcept { return msg1; }
             
-            virtual const char* what() const noexcept override {
+            const char* what() const noexcept override {
                 static std::string s = "ExceptionBase::what("+msg1+")";
                 return s.c_str();
             }
@@ -247,7 +245,7 @@ namespace test02 {
         RuntimeException& operator=(const RuntimeException& o) = default;
         RuntimeException& operator=(RuntimeException&& o) = default;
         
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             static std::string s = "RuntimeException::what("+msg1+")";
             return s.c_str();
         }
@@ -270,7 +268,7 @@ namespace test02 {
         RuntimeSystemException& operator=(const RuntimeSystemException& o) = default;
         RuntimeSystemException& operator=(RuntimeSystemException&& o) = default;
         
-        virtual const char* what() const noexcept override {
+        const char* what() const noexcept override {
             static std::string s = "RuntimeSystemException::what("+msg1+")";
             return s.c_str();
         }
