@@ -326,7 +326,7 @@ int main(int, char*[]) {
 
     {
         sint_t t(ten);
-        assert( eleven  == ++t ); // increments and returns *this; NOLINT(bugprone-assert-side-effect) intended 
+        assert( eleven  == ++t ); // increments and returns *this; NOLINT(bugprone-assert-side-effect) intended
         assert( eleven  == t );
     }
     {

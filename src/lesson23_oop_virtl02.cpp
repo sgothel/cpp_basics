@@ -16,7 +16,7 @@ class base_base_dog {
         {
             cout<< "base_dog::ctor begin" <<endl;
             bark() ; //NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): intentional
-            
+
             cout<< "base_dog::ctor end" <<endl;
         }
 

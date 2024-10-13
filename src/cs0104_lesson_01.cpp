@@ -418,7 +418,7 @@ static bool add_overflow(const short a, const short b, short &res)
 {
     // overflow:  a + b > R+ -> a > R+ - b, with b >= 0
     // underflow: a + b < R- -> a < R- - b, with b < 0
-    
+
     if ( ( b >= 0 && a > std::numeric_limits<short>::max() - b ) ||
          ( b  < 0 && a < std::numeric_limits<short>::min() - b ) )
     {
@@ -502,7 +502,7 @@ static void test03_1_4_immutable() {
 
 struct Class03_2_1 {
     int var = 0;
-    
+
     int erhoeheUm(const int a) {
         var += a;
         return var;
@@ -552,7 +552,7 @@ class Class03_2_3a {
         Class03_2_3a() noexcept {
             std::cout << "Class03_2_3a: Default-Constructor" << std::endl;
         }
-    
+
         /**
          * Custom Constructor 1
          * @param a init value for field_member_01
@@ -564,7 +564,7 @@ class Class03_2_3a {
         {
             std::cout << "Class03_2_3a: Custom-Constructor-1" << std::endl;
         }
-    
+
         /// Copy Constructor
         /// default: `constexpr Class03_2_3a(const Class03_2_3a &o) noexcept = default;`
         Class03_2_3a(const Class03_2_3a &o) noexcept
@@ -573,14 +573,14 @@ class Class03_2_3a {
         {
             std::cout << "Class03_2_3a: Copy-Constructor" << std::endl;
         }
-    
+
         /// Move Constructor
         Class03_2_3a(Class03_2_3a &&o) noexcept = default;
         /// Copy-Assignment operator
         Class03_2_3a& operator=(const Class03_2_3a &o) noexcept = default;
         /// Move-Assignment operator
         Class03_2_3a& operator=(Class03_2_3a &&o) noexcept = default;
-    
+
         /**
          * Destructor
          *
@@ -592,18 +592,18 @@ class Class03_2_3a {
         ~Class03_2_3a() noexcept {
             std::cout << "Class03_2_3a: Destructor" << std::endl;
         }
-        
+
         void increment() noexcept {
             ++field_member_01;
             // 'this' is a pointer to this instance (Object), where method `incement` is applied to
             ++this->field_member_02;
         }
-        
+
         void reset() noexcept {
             field_member_01 = 1;
             field_member_02 = 0;
         }
-        
+
         /** Two way comparison operator */
         bool operator==(const Class03_2_3a& o) const noexcept {
             return field_member_01 + field_member_02 == o.field_member_01 + o.field_member_02;
@@ -621,7 +621,7 @@ class Class03_2_3a {
                 return std::strong_ordering::greater;
             }
         }
-        
+
         /** Compare function returns 0 if equal, -1 if *this < b and 1 if *this > b. */
         int compareTo(const Class03_2_3a& o) const noexcept {
             const int s1 = field_member_01 + field_member_02;
@@ -641,27 +641,27 @@ class Class03_2_3a {
             h = ( ( h << 5 ) - h ) + field_member_01;
             return h;
         }
-        
-        /// std::ostream (stream out) free operator overload 
+
+        /// std::ostream (stream out) free operator overload
         std::ostream& streamout(std::ostream& out) const {
             return out << "Class03_2_3a[ref 0x" << std::hex << this
-                       << std::dec 
-                       << ", 01 " << field_member_01 
-                       << ", 02 " << field_member_01 
+                       << std::dec
+                       << ", 01 " << field_member_01
+                       << ", 02 " << field_member_01
                        << "]";
         }
-        
+
         std::string toString() const {
             std::stringstream ss;
             streamout(ss);
             return ss.str();
-        }    
+        }
 };
 
 int Class03_2_3a::global_var01 = 1; // storage for global static and explicit initialization (init)
 int Class03_2_3a::global_var02;     // storage for global static and w/o initialization
 
-/// std::ostream (stream out) free operator overload 
+/// std::ostream (stream out) free operator overload
 std::ostream& operator<<(std::ostream& out, const Class03_2_3a& v) {
     return v.streamout(out);
 }
@@ -685,13 +685,13 @@ static void test03_2_3a_class() {
         // 1) Compiler allocates stack-memory (memO1) for one instance of type Class03_2_3a
         // 2) Initialize this stack-memory (memO1) using Class03_2_3a's default constructor
         Class03_2_3a i1;
-        
+
         // 3) Use memory (memO1) reference of this instance in o1
         Class03_2_3a &o1 = i1;
-        
-        // instance variable i1 and its reference o1 use same memory address 
+
+        // instance variable i1 and its reference o1 use same memory address
         assert(&i1 == &o1);
-        
+
         assert(1 == i1.field_member_01);
         assert(0 == i1.field_member_02);
         assert(1 == o1.field_member_01);
@@ -702,10 +702,10 @@ static void test03_2_3a_class() {
         // 1) Compiler allocates stack-memory (memO2) for one instance of type Class03_2_3a
         // 2) Initialize this stack-memory (memO2) using Class03_2_3a's default constructor
         Class03_2_3a i2;
-        
+
         // 3) Use memory (memO2) reference of this instance in o2
         Class03_2_3a &o2 = i2;
-        
+
         //
         // NOTE: This created instance i2 within memO2 in stack-memory (reference stored in o2)
         //       is different than i1 within memO1 above (reference stored in o1)
@@ -717,7 +717,7 @@ static void test03_2_3a_class() {
         assert(i1 == i2);
         assert(0 == i1.compareTo(o2));
         assert(&i1 != &i2); // fast ref-check
-        
+
         assert(o1 == o2);
         assert(0 == o1.compareTo(o2));
         assert(&o1 != &o2); // fast ref-check
@@ -776,7 +776,7 @@ static void test03_2_3a_class() {
         o1->reset();
         assert(*o1 == *o2);
         assert(0 == o1->compareTo(*o2));
-        
+
         /// Manually delete heap-memory (unsafe!)
         delete o1;
         delete o2;
@@ -835,45 +835,45 @@ static void test03_2_3a_class() {
     }
 }
 
-/// RAII owner of heap allocated Class03_2_3a instance similar to std::unique_ptr 
+/// RAII owner of heap allocated Class03_2_3a instance similar to std::unique_ptr
 class Class03_2_3a_Owner
 {
     public:
         Class03_2_3a *m_o;
-        
+
         Class03_2_3a_Owner() noexcept
-        : m_o(nullptr) {} 
-    
+        : m_o(nullptr) {}
+
         Class03_2_3a_Owner(Class03_2_3a* o) noexcept
         : m_o(o) {}
-        
+
         /// Deleted Copy Constructor
         Class03_2_3a_Owner(const Class03_2_3a_Owner &o) noexcept = delete;
         /// Deleted Copy-Assignment operator
         Class03_2_3a_Owner& operator=(const Class03_2_3a_Owner &o) noexcept = delete;
-    
+
         /// Default Move Constructor
         Class03_2_3a_Owner(Class03_2_3a_Owner &&o) noexcept = default;
         /// Default Move-Assignment operator
         Class03_2_3a_Owner& operator=(Class03_2_3a_Owner &&o) noexcept = default;
-        
+
         ~Class03_2_3a_Owner() noexcept {
             if( nullptr != m_o ) {
                 delete m_o;
                 m_o = nullptr;
             }
         }
-        
+
         /// may return nullptr, no exception
         Class03_2_3a* ptr() noexcept { return m_o; }
-        
+
         /// throws std::runtime_error if nullptr!
         Class03_2_3a& ref() {
             if( nullptr == m_o ) {
                 throw std::runtime_error("nullptr");
-            } 
-            return *m_o; 
-        }        
+            }
+            return *m_o;
+        }
 };
 
 /// Resource acquisition is initialization
@@ -897,7 +897,7 @@ struct Class03_3 {
     static int lala;
     // Konstante .. 3.3.2 Globale (Klassen) Variablen (immutable)
     static const int lulu = 0;
-    
+
     // 3.3.3 Klassen Instanz Variable (Field)
     int lili = 0;
 };
@@ -906,26 +906,26 @@ int Class03_3::lala = 0;
 /**
  * 3.3 Speicher-Klassen von Variablen
  */
-static void test03_3_storage_class() {    
+static void test03_3_storage_class() {
     Class03_3 o1;
     Class03_3 o2;
-    
+
     // 3.3.3 Klassen Instanz Variable (Field)
     assert(o1.lili == o2.lili); // gleich werte beider instanzen
 
     // 3.3.2 Globale (Klassen) Variablen
     assert(o1.lala == o2.lala); // gleicher wert der gemeinsamen globalen instanz
-    assert(Class03_3::lala == Class03_3::lala); // ditto 
-    assert(o1.lulu == o2.lulu); // ditto 
-    
+    assert(Class03_3::lala == Class03_3::lala); // ditto
+    assert(o1.lulu == o2.lulu); // ditto
+
     // lili wert der instanz o1 auf 10 gesetzt (und nicht von der instanz o1)
     o1.lili = 10;
     assert(o1.lili != o2.lili); // o1.lili == 10, o2.lili == 0
-    
+
     // lala wert der Klasse (aller instanzen) auf 10 gesetzt
     o1.lala = 10;
     assert(o1.lala == o2.lala); // gleich
-    assert(Class03_3::lala == Class03_3::lala); // ditto 
+    assert(Class03_3::lala == Class03_3::lala); // ditto
 }
 
 static void test03_5_arrays() {
@@ -954,7 +954,7 @@ static void test03_5_arrays() {
         const int grades[] = { 1, 2, 3, 4, 4, 3, 2, 1, 5, 3,
                                1, 2, 3, 3, 2, 1, 5 };
         const size_t length = sizeof(grades) / sizeof(int);
-        assert(17 == length);        
+        assert(17 == length);
         int sum = 0;
         for(size_t i=0; i<length; ++i /* for-tail-statement */) { // NOLINT (intended)
             sum += grades[i];
@@ -989,7 +989,7 @@ static void test03_5_arrays() {
             sum += grades[i++];
         }
         const float median = (float)sum / (float)length;
-        std::cout << "Median: " << median << " of " << length << " students. Sum " << sum << std::endl;        
+        std::cout << "Median: " << median << " of " << length << " students. Sum " << sum << std::endl;
     }
 }
 
@@ -1158,7 +1158,7 @@ static void test04_1_branch() {
         }
     }
 
-    // branches: conditional operator '?' 
+    // branches: conditional operator '?'
     {
         {
             const int a = 0;
@@ -1170,7 +1170,7 @@ static void test04_1_branch() {
         }
         {
             int x = 2;
-            
+
             int l;
             if( 0 < x ) {
                 l = 1;
@@ -1185,10 +1185,10 @@ static void test04_1_branch() {
             }
             int result1 = l - r;
             assert(1 == result1);
-            
+
             int result2 = (0 < x ? 1 : 0) - (x < 0 ? 1 : 0);
             assert(result1 == result2);
-            
+
             // x<-1 -> result=-1
             // x=-1 -> result=-1
             //

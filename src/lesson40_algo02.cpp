@@ -53,9 +53,9 @@ size_t ordered_insert(std::vector<int>& array, int value) {
     if( array.size() < 1 ) {
         array.push_back(value);
         return 0;
-    }    
-    // Because std::vector<>::begin() iterator performs arithmetic 
-    // using a signed difference_type, we need to use such a signed type 
+    }
+    // Because std::vector<>::begin() iterator performs arithmetic
+    // using a signed difference_type, we need to use such a signed type
     // here to avoid `bugprone-narrowing-conversions` (LINT)
     //
     // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
@@ -73,7 +73,7 @@ size_t ordered_insert(std::vector<int>& array, int value) {
     // size_t c = 0;
     while( h - l >= 2 ) {
         // iterdiff_t i = ( l + h ) / 2; // l+h too big?
-        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h) 
+        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h)
         // std::cout << "c " << c << " (" << l << ".." << h << "): p " << i << std::endl;
         if ( array[i] < value ) {
             l = i;

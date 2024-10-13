@@ -25,21 +25,21 @@ int main(int, const char**) {
         int* plala = &array[0];
         for(size_t i=0; i<9l; ++i) {
             array[i] = *(plala + i) + 1;
-        }        
+        }
     }
 
-    // Because std::vector<>::begin() iterator performs arithmetic 
-    // using a signed difference_type, we need to use such a signed type 
+    // Because std::vector<>::begin() iterator performs arithmetic
+    // using a signed difference_type, we need to use such a signed type
     // here to avoid `bugprone-narrowing-conversions` (LINT)
     //
     // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
     // aka size_t and mentioned iterator hence lose half the value range possible?
-    {        
+    {
         // index operator[] can use unsigned size_t, full range
         std::vector<int> array(10, 0);
         for(size_t i=0; i<array.size(); ++i) {
             // using unsigned int as index is legal, also full range
-            array[i] += 1; 
+            array[i] += 1;
         }
         // now iterating via iterator, loss of full range
         typedef std::vector<int>::difference_type iterdiff_t;
@@ -47,7 +47,7 @@ int main(int, const char**) {
         for(iterdiff_t i=0; i<sz; ++i) {
             // begin() iterator is signed hence adding signed difference_type, loss of full range
             // same is true w/ all other operations like insert where an iterator is being used
-            *(array.begin() + i) += 1;             
+            *(array.begin() + i) += 1;
         }
         // or .. same issues
         typedef std::vector<int>::iterator iter_t;

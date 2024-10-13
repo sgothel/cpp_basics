@@ -48,19 +48,19 @@ bool test_binsearch1(binary_search_func1_t binary_search, const std::vector<int>
 constexpr static const ssize_t no_index_0 = -1;
 
 ssize_t binary_search00(const std::vector<int>& array, int target_value) {
-    // Because std::vector<>::begin() iterator performs arithmetic 
-    // using a signed difference_type, we need to use such a signed type 
+    // Because std::vector<>::begin() iterator performs arithmetic
+    // using a signed difference_type, we need to use such a signed type
     // here to avoid `bugprone-narrowing-conversions` (LINT)
     //
     // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
     // aka size_t and mentioned iterator hence lose half the value range possible?
     typedef std::vector<int>::difference_type iterdiff_t;
     iterdiff_t l = 0;
-    iterdiff_t h = array.cend() - array.cbegin() - 1;    
+    iterdiff_t h = array.cend() - array.cbegin() - 1;
     iterdiff_t c = 0;
     while( l <= h ) {
         // iterdiff_t i = ( l + h ) / 2; // l+h too big?
-        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h) 
+        iterdiff_t i = l + ( h - l ) / 2; // better, also solved with std::midpoint(l, h)
         std::cout << "c " << c << " [" << l << ".." << h << "]: p " << i << std::endl;
         if ( array[i] < target_value ) {
             l = i + 1;
@@ -132,8 +132,8 @@ size_t binary_search11(const std::vector<int>& array, int target_value) {
 }
 
 void test_binsearch0(binary_search_func0_t binary_search, std::vector<int>& array_in, std::vector<int>& array_miss, int line) {
-    // Because std::vector<>::begin() iterator performs arithmetic 
-    // using a signed difference_type, we need to use such a signed type 
+    // Because std::vector<>::begin() iterator performs arithmetic
+    // using a signed difference_type, we need to use such a signed type
     // here to avoid `bugprone-narrowing-conversions` (LINT)
     //
     // Now, isn't this odd as std::vector<>::size() uses unsigned size_type,
@@ -148,7 +148,7 @@ void test_binsearch0(binary_search_func0_t binary_search, std::vector<int>& arra
             std::cout << "OK   : array_in[" << i << "] = " << array_in[i] << " found at " << idx << std::endl;
         }
     }
-    
+
     const ssize_t amiss_sz = array_miss.cend() - array_miss.cbegin();
     for(ssize_t i=0; i < amiss_sz; ++i) {
         const int target = array_miss[i];
