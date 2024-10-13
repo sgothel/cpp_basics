@@ -13,6 +13,8 @@ endif()
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads REQUIRED)
 
+set(DEBUG ON)
+set(CMAKE_BUILD_TYPE "Debug")
 # set(CMAKE_MESSAGE_LOG_LEVEL DEBUG)
 
 if(NOT DEFINED DONT_USE_RTTI)
@@ -23,6 +25,12 @@ else()
 endif()
 
 JaulibSetup()
+
+# Fixup clangd w/ absolute path
+set (cpp_basics_clangd_source_args "-isystem, ${CMAKE_CURRENT_SOURCE_DIR}/include")
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/clangd.in
+                ${CMAKE_CURRENT_BINARY_DIR}/.clangd)
+file(COPY_FILE ${CMAKE_CURRENT_BINARY_DIR}/.clangd ${CMAKE_CURRENT_SOURCE_DIR}/.clangd)
 
 find_path (SYSTEM_USR_DIR "stdlib.h")
 include_directories (${SYSTEM_USR_DIR})

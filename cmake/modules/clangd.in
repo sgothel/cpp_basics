@@ -12,15 +12,22 @@
 #    CheckOptions:
 #        modernize-use-default-member-init.UseAssignment: true
 
+Index:
+  Background: Build
+  StandardLibrary: No
+
 # Tell clangd to use the compile_commands.json file in the build/default folder
 CompileFlags:
-  CompilationDatabase: build/default
+  CompilationDatabase: @CMAKE_CURRENT_BINARY_DIR@
+  Add: [@cxx_clangd_flags@, @cpp_basics_clangd_source_args@]
 
 Diagnostics:
   UnusedIncludes: Strict
+  ClangTidy:
+    FastCheckFilter: Loose
 
 InlayHints:
-  Enabled: Yes
+  Enabled: No
   BlockEnd: Yes
   Designators: No
   ParameterNames: Yes

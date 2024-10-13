@@ -165,25 +165,24 @@ message(STATUS "JaulibSetup: Compiler = ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "JaulibSetup: TOOLSET ${TOOLSET}")
 message(STATUS "JaulibSetup: CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(DEFINED CMAKE_CXX_CLANG_TIDY)
     message(STATUS "JaulibSetup: clang-tidy preset: ${CMAKE_CXX_CLANG_TIDY}")
 else()
     message(STATUS "JaulibSetup: clang-tidy not used")
 endif()
 
+# for all
+set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
-if(DEFINED CMAKE_CXX_STANDARD)
-    message(STATUS "JaulibSetup: CMAKE_CXX_STANDARD (preset): ${CMAKE_CXX_STANDARD}, CMAKE_CXX_STANDARD_REQUIRED: ${CMAKE_CXX_STANDARD_REQUIRED}")
-else()
-    set(CMAKE_CXX_STANDARD 20 CACHE STRING "" FORCE)
-    message(STATUS "JaulibSetup: CMAKE_CXX_STANDARD (default): ${CMAKE_CXX_STANDARD}, CMAKE_CXX_STANDARD_REQUIRED: ${CMAKE_CXX_STANDARD_REQUIRED}")
-endif()
+
+set(cxx_clangd_flags "-pedantic, -pedantic-errors, -Wall, -Wextra, -Werror, -DDEBUG, -std=c++20")
+message(STATUS "cxx_clangd_flags: ${cxx_clangd_flags}")
 
 #
 # Post initial setup / var-check
 #
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # for all
 set (CC_FLAGS_WARNING "-Wall -Wextra -Werror")
