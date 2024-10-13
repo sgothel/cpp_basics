@@ -3,7 +3,7 @@ include_directories(
 )
 
 # These examples use the standard separate compilation
-file(GLOB_RECURSE SOURCES_IDIOMATIC_EXAMPLES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "lesson*.cpp" "example*.cpp")
+file(GLOB_RECURSE SOURCES_IDIOMATIC_EXAMPLES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "lesson*.cpp" "cs*lesson*.cpp" "example*.cpp")
 
 string( REPLACE ".cpp" "" BASENAMES_IDIOMATIC_EXAMPLES "${SOURCES_IDIOMATIC_EXAMPLES}" )
 
