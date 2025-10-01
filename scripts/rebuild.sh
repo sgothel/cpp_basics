@@ -33,17 +33,22 @@ buildit() {
         echo "time command not available"
     fi
 
-    cd $rootdir/$build_dir
-    ${time_cmd} make -j $CPU_COUNT install
-    if [ $? -eq 0 ] ; then
-        echo "REBUILD SUCCESS $bname $os_name $archabi"
-        cd $rootdir
-        return 0
-    else
+    cd $rootdir
+
+    ${time_cmd} cmake --build ${build_dir} --parallel
+    if [ $? -ne 0 ] ; then
         echo "REBUILD FAILURE $bname $os_name $archabi"
-        cd $rootdir
         return 1
     fi
+
+    cd ${build_dir}
+    make test
+    if [ $? -ne 0 ] ; then
+        echo "TEST FAILURE $bname $os_name $archabi"
+        cd ${rootdir}
+        return 1
+    fi
+    cd ${rootdir}
 }
 
 buildit 2>&1 | tee $logfile

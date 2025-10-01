@@ -35,31 +35,39 @@ buildit() {
         echo "time command not available"
     fi
 
-    cd $rootdir
+    cd ${rootdir}
     rm -rf $dist_dir
     mkdir -p $dist_dir
     rm -rf $build_dir
     mkdir -p $build_dir
-    cd $build_dir
+
     # CLANG_ARGS="-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
     CLANG_ARGS="-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CXX_CLANG_TIDY=/usr/bin/clang-tidy;-p;$rootdir/$build_dir"
 
-    cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir ..
+    ${time_cmd} cmake -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir $CLANG_ARGS -B ${build_dir}
+    if [ $? -ne 0 ] ; then
+        echo "CONFIG FAILURE $bname $os_name $archabi"
+        return 1
+    fi
 
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DUSE_STRIP=OFF ..
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DGPROF=ON ..
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DPERF_ANALYSIS=ON ..
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DINSTRUMENTATION=ON ..
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DINSTRUMENTATION_UNDEFINED=ON ..
-    # cmake $CLANG_ARGS -DCMAKE_INSTALL_PREFIX=$rootdir/$dist_dir -DINSTRUMENTATION_THREAD=ON ..
-    ${time_cmd} make -j $CPU_COUNT install
-    if [ $? -eq 0 ] ; then
-        echo "BUILD SUCCESS $bname $os_name $archabi"
-        cd $rootdir
-        return 0
-    else
+    ${time_cmd} cmake --build ${build_dir} --parallel
+    if [ $? -ne 0 ] ; then
         echo "BUILD FAILURE $bname $os_name $archabi"
-        cd $rootdir
+        return 1
+    fi
+
+    cd ${build_dir}
+    make test
+    if [ $? -ne 0 ] ; then
+        echo "TEST FAILURE $bname $os_name $archabi"
+        cd ${rootdir}
+        return 1
+    fi
+    cd ${rootdir}
+
+    ${time_cmd} cmake --install ${build_dir}
+    if [ $? -ne 0 ] ; then
+        echo "INSTALL FAILURE $bname $os_name $archabi"
         return 1
     fi
 }
