@@ -168,7 +168,7 @@ long summe_loop( long a, long b){
  */
 long summe_gaus( long a, long b ){
    // would require floating type for n/2: ( a + b ) * ( n / 2 )
-   const int n = b - a + 1;
+   const long n = b - a + 1;
    return ( ( a + b ) * n ) / 2;
 }
 
