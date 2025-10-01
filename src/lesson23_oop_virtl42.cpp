@@ -6,6 +6,7 @@
 //============================================================================
 
 #include <iostream>
+#include <utility>
 
 /**
  * test01 demos inheritance of two OO trees (wrong utilization):
@@ -36,8 +37,8 @@ namespace test01 {
         protected:
             std::string msg0;
         public:
-            runtime_error(const std::string& m)
-            : exception(), msg0(m)
+            runtime_error(std::string  m)
+            : exception(), msg0(std::move(m))
             {
                 std::cout<< "runtime_error::ctor: '" << msg0 << "'" <<std::endl;
             }
@@ -76,8 +77,8 @@ namespace test01 {
         protected:
             std::string msg1;
         public:
-            ExceptionBase(const std::string& m)
-            : exception(), msg1(m)
+            ExceptionBase(std::string  m)
+            : exception(), msg1(std::move(m))
             {
                 std::cout<< "ExceptionBase::ctor '" << msg1 << "'" <<std::endl;
             }
@@ -170,8 +171,8 @@ namespace test02 {
         protected:
             std::string msg0;
         public:
-            runtime_error(const std::string& m)
-            : exception(), msg0(m)
+            runtime_error(std::string  m)
+            : exception(), msg0(std::move(m))
             {
                 std::cout<< "runtime_error::ctor: '" << msg0 << "'" <<std::endl;
             }
@@ -210,8 +211,8 @@ namespace test02 {
         protected:
             std::string msg1;
         public:
-            ExceptionBase(const std::string& m)
-            : exception(), msg1(m)
+            ExceptionBase(std::string  m)
+            : exception(), msg1(std::move(m))
             {
                 std::cout<< "ExceptionBase::ctor '" << msg1 << "'" <<std::endl;
             }
@@ -305,8 +306,8 @@ namespace test03 {
         protected:
             std::string msg0;
         public:
-            runtime_error(const std::string& m)
-            : exception(), msg0(m)
+            runtime_error(std::string  m)
+            : exception(), msg0(std::move(m))
             {
                 std::cout<< "runtime_error::ctor: '" << msg0 << "'" <<std::endl;
             }
@@ -345,8 +346,8 @@ namespace test03 {
         protected:
             std::string msg1;
         public:
-            ExceptionBase(const std::string& m)
-            : msg1(m)
+            ExceptionBase(std::string  m)
+            : msg1(std::move(m))
             {
                 std::cout<< "ExceptionBase::ctor '" << msg1 << "'" <<std::endl;
             }

@@ -173,7 +173,7 @@ void test_binsearch1(binary_search_func1_t binary_search, std::vector<int>& arra
         }
     }
     {
-        for(size_t i=0; i < array_miss.size(); ++i) {
+        for(size_t i=0; i < array_miss.size(); ++i) { // NOLINT(modernize-loop-convert)
             const int target = array_miss[i];
             size_t idx;
             if( !test_binsearch1(binary_search, array_in, target, no_index, idx) ) {

@@ -37,7 +37,7 @@ int main(int, const char**) {
     {
         // index operator[] can use unsigned size_t, full range
         std::vector<int> array(10, 0);
-        for(size_t i=0; i<array.size(); ++i) {
+        for(size_t i=0; i<array.size(); ++i) { // NOLINT(modernize-loop-convert)
             // using unsigned int as index is legal, also full range
             array[i] += 1;
         }

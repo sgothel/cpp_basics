@@ -114,7 +114,7 @@ inline std::ostream& operator<<(std::ostream& out, const sint_t& v) {
 }
 
 sint_t make_obj(int64_t v) { return sint_t(v); }
-const sint_t& filter10(const sint_t& o) { return o; }
+const sint_t& filter10(const sint_t& o) { return o; } // NOLINT(bugprone-return-const-ref-from-parameter)
 sint_t  filter11(const sint_t& o) { return o; }
 
 sint_t& filter20(sint_t& o) { o.set(o.get()+1); return o; }
@@ -124,8 +124,8 @@ int main(int, const char* []) {
     std::cout << "Block 1" << std::endl;
     {
         sint_t a;
-        sint_t c(a);
-        sint_t d = a;
+        sint_t c(a);  // NOLINT(performance-unnecessary-copy-initialization)
+        sint_t d = a; // NOLINT(performance-unnecessary-copy-initialization)
         (void)a; (void)c; (void)d;
 
         // ctor.norm: [id 1, val 0]

@@ -109,7 +109,7 @@ void test_binsearch(std::vector<int>& array_in, std::vector<int>& array_miss, in
         }
     }
     {
-        for(size_t i=0; i < array_miss.size(); ++i) {
+        for(size_t i=0; i < array_miss.size(); ++i) { // NOLINT(modernize-loop-convert)
             const int target = array_miss[i];
             size_t idx;
             if( !test_binsearch(array_in, target, no_index, idx) ) {
@@ -134,7 +134,7 @@ void test_ordered_insert(std::vector<int>& array_in, const std::vector<int>& arr
     printVec("EXP", array_exp);
     std::vector<int> array;
     array.reserve( array_in.size() ); // be nice
-    for(size_t i=0; i<array_in.size(); ++i) {
+    for(size_t i=0; i<array_in.size(); ++i) { // NOLINT(modernize-loop-convert)
         const int v = array_in[i];
         const size_t p = ordered_insert(array, v);
         // printVec("added "+std::to_string(v)+" to "+std::to_string(p), array);
