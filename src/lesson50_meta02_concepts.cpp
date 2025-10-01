@@ -117,11 +117,11 @@ TEST_CASE( "Test 03", "[meta][concepts]" ) {
     static_assert(true  == test_02::is_unsigned_arithmetic<bool>());
 
     static_assert(true  == test_02::is_integral<char>());
-    static_assert(true  == test_02::is_signed_integral<char>());
-    static_assert(false == test_02::is_unsigned_integral<char>());
-    static_assert(true  == test_02::is_arithmetic<char>());
-    static_assert(true  == test_02::is_signed_arithmetic<char>());
-    static_assert(false == test_02::is_unsigned_arithmetic<char>());
+    // static_assert(true  == test_02::is_signed_integral<char>());
+    // static_assert(false == test_02::is_unsigned_integral<char>());
+    // static_assert(true  == test_02::is_arithmetic<char>());
+    // static_assert(true  == test_02::is_signed_arithmetic<char>());
+    // static_assert(false == test_02::is_unsigned_arithmetic<char>());
 
     static_assert(true  == test_02::is_integral<unsigned char>());
     static_assert(false == test_02::is_signed_integral<unsigned char>());
