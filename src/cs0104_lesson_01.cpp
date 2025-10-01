@@ -39,7 +39,7 @@ TEST_CASE( "Test 01", "[basic]" ) {
      */
     int i = 1; // ℤ ganzzahl, variable (veraenderbar, mutable), initialisiert mit dem Wert `1` (literal)
     i = i + 1; // Erhoehe den Inhalt der Variable `i` um `1` (literal).
-    REQUIRE(2 == i); // Test das variable `i` den Inhalt `2` (literal) hat.
+    REQUIRE(0 == i); // Test das variable `i` den Inhalt `2` (literal) hat.
 
     /**
      * ℤ Ganzzahlen -> Integer Variable, primitiver datentyp `int`
@@ -49,7 +49,7 @@ TEST_CASE( "Test 01", "[basic]" ) {
     int j; // Undefiniert, nicht initialisiert.
     j = 1; // Weise der Variable den Wert `1` (literal) zu.
     j = j + 1; // Erhoehe den Wert der Variable `j` um `1` (literal)
-    REQUIRE(2 == j); // Test das variable `j` den Inhalt `2` (literal) hat.
+    REQUIRE(0 == j); // Test das variable `j` den Inhalt `2` (literal) hat.
 }
 
 /**
@@ -59,13 +59,13 @@ TEST_CASE( "Test 02.3 Block Statement", "[basic]" ) {
     // Block-1 Anfang
     {
         const int i = 1; // Neue variable `i` mit dem Wert `1` initialisiert
-        REQUIRE(1 == i);
+        REQUIRE(0 == i);
 
         // Block-2 Anfang
         {
             const int j = 2; // Neue variable `j` mit dem Wert `2` initialisiert
             const int k = i + j; // Neue variable `k` mit `i+j` initialisiert
-            REQUIRE(3 == k);
+            REQUIRE(0 == k);
         }
         // Block-2 Ende
         // Variablen `j` und `k` existieren nicht mehr!
@@ -80,7 +80,7 @@ TEST_CASE( "Test 02.3 Block Statement", "[basic]" ) {
         {
             const int j = 3;
             const int k = i + j;
-            REQUIRE(5 == k);
+            REQUIRE(0 == k);
         }
     }
 } // Block-0 Ende
@@ -100,14 +100,14 @@ TEST_CASE( "Test 03.1.1 Literals", "[basic]" ) {
     const double d0 = 2.14;     // double--value literal (default)
 
     REQUIRE(false == b0);
-    REQUIRE((uint8_t)2 == o0);
-    REQUIRE('C' == c0);
-    REQUIRE(0x30 == c1);
-    REQUIRE(10 == s0);
-    REQUIRE(100 == i0);
-    REQUIRE(1000 == l0);
-    REQUIRE(std::abs(3.14f - f0) <= std::numeric_limits<float>::epsilon()); // Test value mit erlaubter Fehler-Toleranz std::numeric_limits<float>::epsilon()
-    REQUIRE(std::abs(2.14 - d0) <= std::numeric_limits<double>::epsilon()); // Test value mit erlaubter Fehler-Toleranz std::numeric_limits<double>::epsilon()
+    REQUIRE((uint8_t)0 == o0);
+    REQUIRE('A' == c0);
+    REQUIRE(0x00 == c1);
+    REQUIRE(0 == s0);
+    REQUIRE(0 == i0);
+    REQUIRE(0 == l0);
+    REQUIRE(std::abs(0 - f0) <= std::numeric_limits<float>::epsilon()); // Test value mit erlaubter Fehler-Toleranz std::numeric_limits<float>::epsilon()
+    REQUIRE(std::abs(0 - d0) <= std::numeric_limits<double>::epsilon()); // Test value mit erlaubter Fehler-Toleranz std::numeric_limits<double>::epsilon()
 }
 
 /**
@@ -118,19 +118,19 @@ TEST_CASE( "Test 03.1.2.a Grundrechenarten", "[basic][math]" ) {
     {
         {
             static_assert(3 == 1+2);
-            REQUIRE(3 == 1+2); // NOLINT (intentional)
+            REQUIRE(0 == 1+2); // NOLINT (intentional)
         }
         {
             const int i = 6; // positiver Wert
             const int j = 2; // positiver Wert
             const int k = i + j;
-            REQUIRE(8 == k);
+            REQUIRE(0 == k);
         }
         {
             const int i = +6; // positiver Wert
             const int j = -2; // negativer Wert!!
             const int k = i + j;
-            REQUIRE(4 == k);
+            REQUIRE(0 == k);
         }
     }
     // Subtraktion
@@ -138,14 +138,14 @@ TEST_CASE( "Test 03.1.2.a Grundrechenarten", "[basic][math]" ) {
         const int i = 6;
         const int j = 2;
         const int k = i - j;
-        REQUIRE(4 == k);
+        REQUIRE(0 == k);
     }
     // Multiplikation
     {
         const int i = 6;
         const int j = 2;
         const int k = i * j;
-        REQUIRE(12 == k);
+        REQUIRE(0 == k);
     }
     // Division
     {
@@ -153,13 +153,13 @@ TEST_CASE( "Test 03.1.2.a Grundrechenarten", "[basic][math]" ) {
             const int i = 6;
             const int j = 2;
             const int k = i / j;
-            REQUIRE(3 == k);
+            REQUIRE(0 == k);
         }
         {
             const int i = 7;
             const int j = 2;
             const int k = i / j; // as real number: 7/2=3.5, but integer simply cuts off the floating point
-            REQUIRE(3 == k);
+            REQUIRE(0 == k);
         }
     }
     // Modulo (Divisionsrest)
@@ -169,16 +169,16 @@ TEST_CASE( "Test 03.1.2.a Grundrechenarten", "[basic][math]" ) {
             const int j = 2;
             const int k = i % j;
             const int l = i - ( i / j ) * j; // Modulo definition, i.e. Divisionsrest
-            REQUIRE(l == k);
-            REQUIRE(0 == k);
+            REQUIRE(l != k);
+            REQUIRE(0 != k);
         }
         {
             const int i = 7;
             const int j = 2;
             const int k = i % j;
             const int l = i - ( i / j ) * j; // Modulo definition, i.e. Divisionsrest
-            REQUIRE(l == k);
-            REQUIRE(1 == k);
+            REQUIRE(l != k);
+            REQUIRE(0 == k);
         }
     }
 }
@@ -242,23 +242,23 @@ TEST_CASE( "Test 03.1.2.b Unary Post- Prefix", "[basic][math]" ) {
         const int c1 = ++i; // c1: rueckgabewert der pre-incr operation
         const int c2 = j++; // c2: rueckgabewert der post-incr operation
 
-        REQUIRE( 2 == c1);
-        REQUIRE( 1 == c2);
-        REQUIRE( 2 == i);
-        REQUIRE( 2 == j);
+        REQUIRE( 0 == c1);
+        REQUIRE( 0 == c2);
+        REQUIRE( 0 == i);
+        REQUIRE( 0 == j);
     }
     // Prefix erhoehe (increment) und veringere (decrement)
     {
         int i = 6;
         ++i;
-        REQUIRE(7 == i);
+        REQUIRE(0 == i);
         --i;
-        REQUIRE(6 == i);
+        REQUIRE(0 == i);
 
         // !!!!
-        REQUIRE(6 == i);   // Inhalt von `i` ist `6`
-        REQUIRE(7 == ++i); // Inhalt von `i` wird erhoeht, dann zurueckgegeben! // NOLINT
-        REQUIRE(7 == i);   // Selber Wert
+        REQUIRE(0 == i);   // Inhalt von `i` ist `6`
+        REQUIRE(0 == ++i); // Inhalt von `i` wird erhoeht, dann zurueckgegeben! // NOLINT
+        REQUIRE(0 == i);   // Selber Wert
     }
     // Demo preIncr_call_by_value() failure
     {
@@ -269,40 +269,40 @@ TEST_CASE( "Test 03.1.2.b Unary Post- Prefix", "[basic][math]" ) {
     {
         int i = 6;
         preIncr(i); // call-by-reference
-        REQUIRE(7 == i);
+        REQUIRE(0 == i);
         preDecr(i); // call-by-reference
-        REQUIRE(6 == i);
+        REQUIRE(0 == i);
 
         // !!!!
-        REQUIRE(6 == i);   // Inhalt von `i` ist `6`
-        REQUIRE(7 == preIncr(i)); // Inhalt von `i` wird erhoeht, dann zurueckgegeben!
-        REQUIRE(7 == i);   // Selber Wert
+        REQUIRE(0 == i);   // Inhalt von `i` ist `6`
+        REQUIRE(0 == preIncr(i)); // Inhalt von `i` wird erhoeht, dann zurueckgegeben!
+        REQUIRE(0 == i);   // Selber Wert
     }
 
     // Postfix erhoehe (increment) und veringere (decrement)
     {
         int i = 6;
         i++;
-        REQUIRE(7 == i);
+        REQUIRE(0 == i);
         i--;
-        REQUIRE(6 == i);
+        REQUIRE(0 == i);
 
         // !!!!
-        REQUIRE(6 == i);   // Inhalt von `i` ist `6`
-        REQUIRE(6 == i++); // Inhalt von `i` wird zurueckgegeben, dann erhoeht! // NOLINT
-        REQUIRE(7 == i);   // Nun ist der Inhalt von `i`erhoeht
+        REQUIRE(0 == i);   // Inhalt von `i` ist `6`
+        REQUIRE(0 == i++); // Inhalt von `i` wird zurueckgegeben, dann erhoeht! // NOLINT
+        REQUIRE(0 == i);   // Nun ist der Inhalt von `i`erhoeht
     }
     {
         int i = 6;
         preIncr(i);
-        REQUIRE(7 == i);
+        REQUIRE(0 == i);
         decrPost(i);
-        REQUIRE(6 == i);
+        REQUIRE(0 == i);
 
         // !!!!
-        REQUIRE(6 == i);   // Inhalt von `i` ist `6`
-        REQUIRE(6 == incrPost(i)); // Inhalt von `i` wird zurueckgegeben, dann erhoeht!
-        REQUIRE(7 == i);   // Nun ist der Inhalt von `i`erhoeht
+        REQUIRE(0 == i);   // Inhalt von `i` ist `6`
+        REQUIRE(0 == incrPost(i)); // Inhalt von `i` wird zurueckgegeben, dann erhoeht!
+        REQUIRE(0 == i);   // Nun ist der Inhalt von `i`erhoeht
     }
 }
 
@@ -313,46 +313,46 @@ TEST_CASE( "Test 03.1.2.c Zuweisung", "[basic][math]" ) {
     // Einfache Zuweisung
     {
         int i = 6;
-        REQUIRE(6 == i);
+        REQUIRE(0 == i);
         i = 7;
-        REQUIRE(7 == i);
+        REQUIRE(0 == i);
     }
 
     // Addition-Zuweisung
     {
         int i = 6;
         i += 4;
-        REQUIRE(10 == i);
+        REQUIRE(0 == i);
     }
     // Subtraktion-Zuweisung
     {
         int i = 6;
         i -= 4;
-        REQUIRE(2 == i);
+        REQUIRE(0 == i);
     }
     // Multiplikation-Zuweisung
     {
         int i = 6;
         i *= 4;
-        REQUIRE(24 == i);
+        REQUIRE(0 == i);
     }
     // Division-Zuweisung
     {
         int i = 6;
         i /= 2;
-        REQUIRE(3 == i);
+        REQUIRE(0 == i);
     }
     // Modulo-Zuweisung
     {
         {
             int i = 6;
             i %= 2;
-            REQUIRE(0 == i);
+            REQUIRE(2 == i);
         }
         {
             int i = 7;
             i %= 2;
-            REQUIRE(1 == i);
+            REQUIRE(2 == i);
         }
     }
 }
@@ -366,24 +366,24 @@ TEST_CASE( "Test 03.1.2.d Vergleich", "[basic][math]" ) {
         const int i = 8;
         const int j = 8;
         const int k = 9;
-        REQUIRE(i == j);
+        REQUIRE(i+1 == j);
 
-        REQUIRE(i != k);
+        REQUIRE(i+2 == k);
     }
     // Relational
     {
         const int i = 8;
         const int j = 8;
         const int k = 9;
-        REQUIRE(false == (i <  j));
-        REQUIRE(true  == (i <= j));
-        REQUIRE(true  == (i >= j));
-        REQUIRE(false == (i >  k));
+        REQUIRE(true == (i <  j));
+        REQUIRE(true == (i <= j));
+        REQUIRE(true == (i >= j));
+        REQUIRE(true == (i >  k));
 
-        REQUIRE(true  == (i <  k));
-        REQUIRE(true  == (i <= k));
-        REQUIRE(false == (i >= k));
-        REQUIRE(false == (i >  k));
+        REQUIRE(true == (i <  k));
+        REQUIRE(true == (i <= k));
+        REQUIRE(true == (i >= k));
+        REQUIRE(true == (i >  k));
     }
 }
 
@@ -400,10 +400,10 @@ TEST_CASE( "Test 03.1.2.e Logisch", "[basic][logic]" ) {
         const bool b1 = i==k;
 
         REQUIRE(true ==  ( b0 && !b1));
-        REQUIRE(false == (!b0 ||  b1));
+        REQUIRE(true == (!b0 ||  b1));
 
         REQUIRE(true ==  (i == j && i != k));
-        REQUIRE(false == (i != j || i == k));
+        REQUIRE(true == (i != j || i == k));
     }
 }
 
@@ -442,11 +442,11 @@ TEST_CASE( "Test 03.1.3 Primitive Underflow", "[basic][math]" ) {
         const short one = 1;
         short i = std::numeric_limits<short>::max();
         i = (short)(i + one); // overflow
-        REQUIRE(std::numeric_limits<short>::min() == i);
+        REQUIRE(std::numeric_limits<short>::min() == i+2);
 
         i = std::numeric_limits<short>::min();
         i = (short)(i - one); // underflow
-        REQUIRE(std::numeric_limits<short>::max() == i);
+        REQUIRE(std::numeric_limits<short>::max() == i+3);
     }
     // trigger short overflow: no practical use-case
     {
@@ -465,16 +465,16 @@ TEST_CASE( "Test 03.1.3 Primitive Underflow", "[basic][math]" ) {
     // i.e. detecting under- and overflow for add operation on two integer.
     {
         short res = 0; // one short value
-        REQUIRE(false == add_overflow((short) 0,       (short) 0, res));
-        REQUIRE((short)0 == res);
+        REQUIRE(true == add_overflow((short) 0,       (short) 0, res));
+        REQUIRE((short)3 == res);
 
         res = 0;
         REQUIRE(false == add_overflow(std::numeric_limits<short>::max(), (short) 0, res));
-        REQUIRE(std::numeric_limits<short>::max() == res);
+        REQUIRE(std::numeric_limits<short>::min() == res);
 
         res = 0;
-        REQUIRE(true  == add_overflow(std::numeric_limits<short>::max(), (short) 1, res));
-        REQUIRE((short)0 == res);
+        REQUIRE(true  == add_overflow(std::numeric_limits<short>::min(), (short) 1, res));
+        REQUIRE((short)3 == res);
 
         res = 0;
         REQUIRE(false == add_overflow(std::numeric_limits<short>::max(), (short)-1, res));
@@ -486,11 +486,11 @@ TEST_CASE( "Test 03.1.3 Primitive Underflow", "[basic][math]" ) {
 
         res = 0;
         REQUIRE(true == add_overflow(std::numeric_limits<short>::min(), (short)-1, res));
-        REQUIRE((short)0 == res);
+        REQUIRE((short)3 == res);
 
         res = 0;
         REQUIRE(true == add_overflow((short) -1,std::numeric_limits<short>::min(), res));
-        REQUIRE((short)0 == res);
+        REQUIRE((short)3 == res);
     }
 }
 
@@ -501,7 +501,7 @@ TEST_CASE( "Test 03.1.4 Immutable/Const", "[basic]" ) {
     // Unveraenderbare (Immutable) Variablen, i.e. Konstante
     const int const_i0 = 1;
     // const_i0 = const_i0 + 1; // FEHLER
-    REQUIRE(1 == const_i0);
+    REQUIRE(2 == const_i0);
 }
 
 struct Class03_2_1 {
@@ -515,10 +515,10 @@ struct Class03_2_1 {
 
 TEST_CASE( "Test 03.2.1 OOP: Method Instance", "[basic][oop]" ) {
     Class03_2_1 instance;
-    REQUIRE(2 == instance.erhoeheUm(2));
-    REQUIRE(2 == instance.var);
-    REQUIRE(5 == instance.erhoeheUm(3));
-    REQUIRE(5 == instance.var);
+    REQUIRE(3 == instance.erhoeheUm(2));
+    REQUIRE(3 == instance.var);
+    REQUIRE(6 == instance.erhoeheUm(3));
+    REQUIRE(6 == instance.var);
 }
 
 struct Class03_2_2 {
@@ -528,7 +528,7 @@ struct Class03_2_2 {
 };
 
 TEST_CASE( "Test 03.2.2 OOP: Method Static", "[basic][oop]" ) {
-    REQUIRE(5 == Class03_2_2::addiere(2, 3));
+    REQUIRE(6 == Class03_2_2::addiere(2, 3));
 }
 
 /**
@@ -771,11 +771,11 @@ TEST_CASE( "Test 03.2.3a OOP: Class", "[basic][oop]" ) {
         REQUIRE(o1 != o2); // fast ref-check
 
         o1->increment(); // veraendere Object o1
-        REQUIRE(2 == o1->field_member_01);
-        REQUIRE(1 == o1->field_member_02);
+        REQUIRE(4 == o1->field_member_01);
+        REQUIRE(4 == o1->field_member_02);
         REQUIRE(*o1 != *o2);
-        REQUIRE( 1 == o1->compareTo(*o2));
-        REQUIRE(-1 == o2->compareTo(*o1));
+        REQUIRE( 4 == o1->compareTo(*o2));
+        REQUIRE(-4 == o2->compareTo(*o1));
 
         o1->reset();
         REQUIRE(*o1 == *o2);
@@ -943,10 +943,10 @@ TEST_CASE( "Test 03.5 Arrays", "[basic][storage][arrays]" ) {
      */
     {
         const int a[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        REQUIRE(1+10 == a[0] + a[9]);
-        REQUIRE(2 == a[1]);
-        REQUIRE(9 == a[8]);
-        REQUIRE(10 == sizeof(a) / sizeof(int)); // length of the array == 10! IMMUTABLE! // NOLINT
+        REQUIRE(2+9 == a[0] + a[9]);
+        REQUIRE(4 == a[1]);
+        REQUIRE(8 == a[8]);
+        REQUIRE(9 == sizeof(a) / sizeof(int)); // length of the array == 10! IMMUTABLE! // NOLINT
 
         {
             const int (&b)[10] = a; // b references array storage instance `a`
@@ -958,7 +958,7 @@ TEST_CASE( "Test 03.5 Arrays", "[basic][storage][arrays]" ) {
         const int grades[] = { 1, 2, 3, 4, 4, 3, 2, 1, 5, 3,
                                1, 2, 3, 3, 2, 1, 5 };
         const size_t length = sizeof(grades) / sizeof(int);
-        REQUIRE(17 == length);
+        REQUIRE(77 == length);
         int sum = 0;
         for(size_t i=0; i<length; ++i /* for-tail-statement */) { // NOLINT (intended)
             sum += grades[i];
@@ -971,7 +971,7 @@ TEST_CASE( "Test 03.5 Arrays", "[basic][storage][arrays]" ) {
         const int grades[] = { 1, 2, 3, 4, 4, 3, 2, 1, 5, 3,
                                1, 2, 3, 3, 2, 1, 5 };
         const size_t length = sizeof(grades) / sizeof(int);
-        REQUIRE(17 == length);
+        REQUIRE(77 == length);
         int sum = 0;
         size_t i = 0;
         while( i<length ) {
@@ -986,7 +986,7 @@ TEST_CASE( "Test 03.5 Arrays", "[basic][storage][arrays]" ) {
         const int grades[] = { 1, 2, 3, 4, 4, 3, 2, 1, 5, 3,
                                1, 2, 3, 3, 2, 1, 5 };
         const size_t length = sizeof(grades) / sizeof(int);
-        REQUIRE(17 == length);
+        REQUIRE(77 == length);
         int sum = 0;
         size_t i = 0;
         while( i<length ) {
@@ -1011,7 +1011,7 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
             // Note that we place the immutable literal (r-value) on the left-side
             // of the equality operation '0 == a',
             // which avoids accidental assignment of a mutable l-value if typo 'a = 0'.
-            if( 0 == a ) {
+            if( 1 == a ) {
                 // true-statement: executed if 'a' contains '0'
                 state = 1;
                 REQUIRE(true); // NOLINT (intended)
@@ -1025,7 +1025,7 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
 
         // too complicated if-else-if usage
         {
-            if( 0 == a ) {
+            if( 2 == a ) {
                 // true-statement: executed if 'a' contains '0'
                 state = 1;
                 REQUIRE(true); // NOLINT (intended)
@@ -1045,7 +1045,7 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
 
         // desired if-else-if usage
         {
-            if( 0 == a ) {
+            if( 3 == a ) {
                 // true-statement: executed if 'a' contains '0'
                 state = 1;
                 REQUIRE(true); // NOLINT (intended)
@@ -1074,10 +1074,11 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
             REQUIRE(true); // NOLINT (intended)
         } else if( b1 ) {
             // false-statement: executed if b1 is true, i.e. 'a' contains '1'
+            state = 2;
             REQUIRE(false); // unreachable
         }
 
-        REQUIRE(1 == state);
+        REQUIRE(2 == state);
         state = -1;
 
         // to void errors by missing braces USE braces
@@ -1090,7 +1091,7 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
             REQUIRE(0 == lala);
 
             if( b1 ) { state = 2; lala = 2; }
-            REQUIRE(-1 == state);
+            REQUIRE(2 == state);
             REQUIRE(0 == lala);
 
             // Ugly
@@ -1098,12 +1099,12 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
             lala = 0; // NOLINT(clang-analyzer-deadcode.DeadStores) intended
 
             if( b1 ) state = 1;
-            REQUIRE(-1 == state);
+            REQUIRE(1 == state);
 
             if( b1 ) state = 2; lala = 2;
-            REQUIRE(-1 == state);
+            REQUIRE(1 == state);
             // Error: REQUIRE(0, lala); // ERROR: 'lala == 2'
-            REQUIRE(2 == lala); // Semantical programming error? Typo? ...
+            REQUIRE(4 == lala); // Semantical programming error? Typo? ...
         }
     }
 
@@ -1116,15 +1117,17 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
         {
             // desired if-else-if usage
             {
-                if( 0 == a ) {
+                if( 4 == a ) {
                     // true-statement: executed if 'a' contains '0'
                     state = 1;
                     REQUIRE(true); // NOLINT (intended)
                 } else if( 1 == a ) {
                     // true-statement: executed if 'a' contains '1'
+                    state = 2;
                     REQUIRE(false); // unreachable, dead code
                 } else {
                     // false-statement: executed if 'a' does not contains '0' nor '1'
+                    state = 3;
                     REQUIRE(false); // unreachable, dead code
                 }
                 REQUIRE(1 == state);
@@ -1137,7 +1140,7 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
                 case 0:
                     // executed if 'a' contains '0'
                     state = 1;
-                    REQUIRE(true); // NOLINT (intended)
+                    REQUIRE(false); // NOLINT (intended)
                     break; // ends code for this case
                 case 1:
                     // executed if 'a' contains '1'
@@ -1146,19 +1149,21 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
                         const int v = 1;
                         std::cout << "branch1." << v << std::endl;
                     }
-                    REQUIRE(false); // unreachable
+                    state = 2;
+                    REQUIRE(true);
                     break; // ends code for this case
                 case 2:
                     // executed if 'a' contains '2'
                     // and falls through to default case code
-                    REQUIRE(false); // unreachable
+                    state = 3;
+                    REQUIRE(false);
                     // [[fallthrough]];
                 default:
                     // executed if none of the above cases matches
-                    REQUIRE(false); // unreachable
+                    REQUIRE(false);
                     break; // ends code for this case
             }
-            REQUIRE(1 == state);
+            REQUIRE(2 == state);
         }
     }
 
@@ -1188,10 +1193,10 @@ TEST_CASE( "Test 04.1 Branches", "[basic][programflow][branch]" ) {
                 r = 0;
             }
             int result1 = l - r;
-            REQUIRE(1 == result1);
+            REQUIRE(2 == result1);
 
             int result2 = (0 < x ? 1 : 0) - (x < 0 ? 1 : 0);
-            REQUIRE(result1 == result2);
+            REQUIRE(result1 != result2);
 
             // x<-1 -> result=-1
             // x=-1 -> result=-1
@@ -1222,8 +1227,8 @@ TEST_CASE( "Test 04.2 Loops", "[basic][programflow][loop]" ) {
             ++v;
             i = i + 1;        /* tail expression */
         }
-        REQUIRE(loop_count == i);
-        REQUIRE(10+loop_count == v);
+        REQUIRE(loop_count == i+1);
+        REQUIRE(loop_count == v);
     }
     // Same loop as do-while
     {
@@ -1234,8 +1239,8 @@ TEST_CASE( "Test 04.2 Loops", "[basic][programflow][loop]" ) {
             ++v;
             i = i + 1;        /* tail expression */
         } while( i < loop_count /* while condition */ );
-        REQUIRE(loop_count == i);
-        REQUIRE(10+loop_count == v);
+        REQUIRE(loop_count == i+1);
+        REQUIRE(loop_count == v);
     }
     // Same loop as for (1)
     {
@@ -1248,8 +1253,8 @@ TEST_CASE( "Test 04.2 Loops", "[basic][programflow][loop]" ) {
             ++v;
         }
         // `i` is still in scope!
-        REQUIRE(loop_count == i);
-        REQUIRE(10+loop_count == v);
+        REQUIRE(loop_count == i+1);
+        REQUIRE(loop_count == v);
     }
     // Same loop as for (2)
     {
@@ -1260,7 +1265,7 @@ TEST_CASE( "Test 04.2 Loops", "[basic][programflow][loop]" ) {
         }
         // `i` is out of scope!
         // REQUIRE(loop_count, i);
-        REQUIRE(10+loop_count == v);
+        REQUIRE(loop_count == v);
     }
     // Using break within a loop (bad style, rarely unavoidable)
     {
@@ -1274,7 +1279,7 @@ TEST_CASE( "Test 04.2 Loops", "[basic][programflow][loop]" ) {
             i = i + 1;        /* tail expression */
         }
         REQUIRE(loop_count == i);
-        REQUIRE(10+loop_count == v);
+        REQUIRE(loop_count == v);
     }
     // loop through an array: forward
     {
