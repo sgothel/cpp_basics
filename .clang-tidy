@@ -1,7 +1,9 @@
 Checks:  'clang-diagnostic-*, clang-analyzer-*,
           modernize-*, bugprone-*, performance-*,
-          unused-*,misc-*,
+          misc-*,
           readability-redundant-*,
+          bugprone-exception-escape,
+          -bugprone-chained-comparison,
           -bugprone-reserved-identifier, -bugprone-easily-swappable-parameters, -bugprone-assignment-in-if-condition,
           -bugprone-misplaced-widening-cast, -bugprone-branch-clone,
           -clang-diagnostic-unknown-warning-option,
@@ -12,7 +14,7 @@ Checks:  'clang-diagnostic-*, clang-analyzer-*,
           -modernize-avoid-bind, -modernize-use-transparent-functors, -modernize-use-constraints,
           -modernize-min-max-use-initializer-list, -modernize-type-traits,
           -performance-avoid-endl, -performance-enum-size,
-          -misc-macro-parentheses, -misc-non-private-member-variables-in-classes, -misc-include-cleaner,
+          -misc-non-private-member-variables-in-classes, -misc-include-cleaner,
           -misc-const-correctness, -misc-unconventional-assign-operator, -misc-use-anonymous-namespace,
           -misc-misplaced-const, -misc-no-recursion, -misc-confusable-identifiers, -misc-use-internal-linkage,
           -readability-redundant-declaration, -readability-redundant-inline-specifier, -readability-redundant-member-init,
@@ -21,11 +23,12 @@ Checks:  'clang-diagnostic-*, clang-analyzer-*,
 CheckOptions:
   - key:             modernize-use-default-member-init.UseAssignment
     value:           'true'
+  - key:             modernize-use-scoped-lock.WarnOnSingleLocks
+    value:           'false'
 
 WarningsAsErrors: '*'
-HeaderFilterRegex: '(include/cpp_basics/.*)\.hpp'
+HeaderFilterRegex: '(include/cpp_basics/).*$'
+
 # AnalyzeTemporaryDtors: false
 FormatStyle:     none
 InheritParentConfig: false
-# User:            sven
-

@@ -11,7 +11,6 @@
 #include <cmath>
 #include <cassert>
 
-#include <string>
 #include <memory>
 
 /**
@@ -84,15 +83,15 @@ int main(int argc, const char* argv[]) {
         // Assign address of variable `i` to int-pointer `p_i`.
         int* p_i = &i;
 
-        printf("00: i: value %d, size %zu, address %p\n", i, sizeof(i), p_i);
+        printf("00: i: value %d, size %zu, address %p\n", i, sizeof(i), (void*)p_i);
 
         // Assign 6 to content of int-pointer `p_i`, aka int-variable `i`.
         *p_i = 6;
-        printf("01: i: value %d, size %zu, address %p\n", i, sizeof(i), p_i);
+        printf("01: i: value %d, size %zu, address %p\n", i, sizeof(i), (void*)p_i);
 
         {
             const int r = return_incremented_value(i);
-            printf("02: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
+            printf("02: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), (void*)p_i, r);
             assert(7 == r);
             assert(6 == i);
 
@@ -101,7 +100,7 @@ int main(int argc, const char* argv[]) {
 
         {
             const int r = increment_reference_and_return_01(i);
-            printf("03: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
+            printf("03: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), (void*)p_i, r);
             assert(7 == r);
             assert(7 == i);
 
@@ -110,7 +109,7 @@ int main(int argc, const char* argv[]) {
 
         {
             const int r = increment_reference_and_return_02(&i);
-            printf("04: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), p_i, r);
+            printf("04: i: value %d, size %zu, address %p; r %d\n", i, sizeof(i), (void*)p_i, r);
             assert(8 == r);
             assert(8 == i);
 
@@ -123,13 +122,12 @@ int main(int argc, const char* argv[]) {
     {
         // `incr_func` is a created type definition of a function
         typedef int(*incr_func)(const int);
-        printf("10: return_incremented_value: address %p\n",
-                return_incremented_value);
+        printf("10: return_incremented_value: address %p\n", (void*)return_incremented_value);
 
         incr_func f1 = return_incremented_value;
         const int i = 10;
         const int r = f1(i);
-        printf("11: i: value %d, size %zu; f1 %p, size f1 %zu, r %d\n", i, sizeof(i), f1, sizeof(f1), r);
+        printf("11: i: value %d, size %zu; f1 %p, size f1 %zu, r %d\n", i, sizeof(i), (void*)f1, sizeof(f1), r);
         assert( return_incremented_value == f1 );
         assert( 11 == r );
         assert( 10 == i );
@@ -206,7 +204,7 @@ int main(int argc, const char* argv[]) {
             for(size_t i=0; i<len; ++i) {
                 // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
                 const int v = array[i];
-                assert( static_cast<int>( i ) == v );
+                assert( int( i ) == v ); // NOLINT(modernize-use-integer-sign-comparison)
             }
 
             // Demonstrate pointer distance by element-size: 1 == ( array + 1 ) - array
@@ -216,7 +214,7 @@ int main(int argc, const char* argv[]) {
                 int* p1_int = array + 1;
                 int* p0_int = array;
                 size_t element_distance = p1_int - p0_int;
-                printf("1 element distance int int-size: %zu, p1 %p, p0 %p\n", element_distance, p1_int, p0_int);
+                printf("1 element distance int int-size: %zu, p1 %p, p0 %p\n", element_distance, (void*)p1_int, (void*)p0_int);
                 assert( 1 == ( p1_int - p0_int ) );
             }
 
@@ -251,7 +249,7 @@ int main(int argc, const char* argv[]) {
             for(size_t i=0; i<len; ++i) {
                 // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
                 const int v = array[i];
-                assert( static_cast<int>( i ) == v );
+                assert( int( i ) == v ); // NOLINT(modernize-use-integer-sign-comparison)
             }
 
             // Explicit destruction of allocated memory!
@@ -274,7 +272,7 @@ int main(int argc, const char* argv[]) {
             for(size_t i=0; i<len; ++i) {
                 // implicit pointer arithmetic of `array[i[` ==  `*( array + i )`
                 const int v = array[i];
-                assert( static_cast<int>( i ) == v );
+                assert( int( i ) == v ); // NOLINT(modernize-use-integer-sign-comparison)
             }
 
             // Manual destructor call matching `placement-new` above,
